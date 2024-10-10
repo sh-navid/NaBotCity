@@ -1,2 +1,6 @@
+# Files
 package-*.json
+
+# Folders
+Dist
 node_modules
