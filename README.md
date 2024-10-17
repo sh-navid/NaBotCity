@@ -1,9 +1,21 @@
-# Rux
+# RuX
 
-## Swarm Robot Intractions Simulator
+
+## ARobot
+![](/Documents/Screenshots/ARobot.png)
+
+## Swarm Robot Simulator (SRS)
 ![](/Documents/Screenshots/V1.png)
 
-## Simulator Clean Architecture
+## RuX Modules
+- SRS
+- AI
+    - Hub
+    - Services
+    - Concepts
+- Nabot (Assistant)
+
+## SRS Clean Architecture
 - Core
     - Contains the business logic
     - Independent of other layers
@@ -16,3 +28,5 @@
 - Presentation
     - UI
     - Controllers/endpoints
+
+
