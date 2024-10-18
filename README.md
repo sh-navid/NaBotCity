@@ -15,6 +15,28 @@
     - Concepts
 - Nabot (Assistant)
 
+## RuX SRS Sensors
+- General
+    - [ ] Accelerometer
+    - [ ] Camera
+    - [ ] ForceTorque
+    - [ ] Pressure
+    - [ ] Sound
+- Light
+    - [ ] Photoresistor
+    - [ ] Photovoltaic
+- Navigation
+    - [ ] GPS
+    - [ ] Gyroscope
+    - [ ] IMU
+    - [ ] LiDAR
+- Proximity
+    - [ ] Contact
+    - [ ] Infrared
+    - [ ] Ultrasonic
+- Thermal
+    - [ ] Temperature
+
 ## SRS Clean Architecture
 - Core
     - Contains the business logic
