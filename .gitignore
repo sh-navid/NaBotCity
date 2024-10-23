@@ -4,3 +4,4 @@ package-*.json
 # Folders
 Dist
 node_modules
+build
