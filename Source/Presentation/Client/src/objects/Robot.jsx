@@ -1,5 +1,5 @@
+import * as THREE from 'three';
 import { Json } from "../utils/Json";
-import { useGLTF } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import { Endpoints } from "../configs/Endpoints";
 import { Random } from "./../helpers/RandomHelper";
@@ -7,6 +7,7 @@ import { RobotHelper } from "../helpers/RobotHelper";
 import { Constraints } from "../configs/Constraints";
 import { TextObject } from "./../components/TextObject";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { PerspectiveCamera, useGLTF } from "@react-three/drei";
 
 const _robotHelper = new RobotHelper(Constraints);
 
@@ -15,13 +16,15 @@ export const Robot = ({
   initPosition = [0, 0, 0],
   isManual = false,
 }) => {
+  const boxRef = useRef(null);
   const roboRef = useRef(null);
-  const textRef = useRef(null);
   const [data, setData] = useState(null);
   const [a, setA] = useState([0, 0, 0, 0]);
   const [b, setB] = useState([0, 0, 0, 0]);
   const [position, setPosition] = useState(initPosition);
   const { scene, isLoading, error } = useGLTF(Endpoints.Download(name));
+
+  const cameraRef = useRef(null);
 
   useEffect(() => {
     let x = Json.clone(position);
@@ -30,16 +33,16 @@ export const Robot = ({
       if (!isManual) return;
       switch (event.key) {
         case "ArrowUp":
-          x[2] -= 2; // Move forward
+          x[2] += 2;
           break;
         case "ArrowDown":
-          x[2] += 2; // Move backward
+          x[2] -= 2;
           break;
         case "ArrowLeft":
-          x[0] -= 2; // Move left
+          x[0] -= 2;
           break;
         case "ArrowRight":
-          x[0] += 2; // Move right
+          x[0] += 2;
           break;
 
         case "q":
@@ -133,13 +136,8 @@ export const Robot = ({
     };
   }, []);
 
-  useFrame(() => {
+  const updateMovements = () => {
     const r1 = roboRef.current;
-    const r2 = textRef.current;
-
-    r2.position.x = r1.position.x;
-    r2.position.y = 0.1;
-    r2.position.z = r1.position.z - 1.7;
 
     const mv = 0.05;
 
@@ -154,6 +152,35 @@ export const Robot = ({
     } else if (r1.position.z - mv > position[2]) {
       r1.position.z -= mv;
     }
+  };
+
+  const updateCamera = () => {
+    var a = roboRef.current.getObjectByName(`Arm4-A`);
+    var b = roboRef.current.getObjectByName(`Arm4-B`);
+
+    if (cameraRef.current && a && b) {
+      // Make the camera look at the box
+      //cameraRef.current.position.set(a.position[0],a.position[1],a.position[2]);
+
+
+
+      const worldPosition = new THREE.Vector3();
+      b.getWorldPosition(worldPosition);
+      // console.log('World Position:', worldPosition);
+
+      boxRef.current.position.x = worldPosition.x;
+      boxRef.current.position.y = worldPosition.y;
+      boxRef.current.position.z = worldPosition.z;
+
+      cameraRef.current.position.x = worldPosition.x;
+      cameraRef.current.position.y = worldPosition.y;
+      cameraRef.current.position.z = worldPosition.z;
+      cameraRef.current.lookAt(b.position);
+    }
+  };
+
+  useFrame(() => {
+    updateMovements();
 
     if (data != null) {
       _robotHelper.moveArmA(data, 1, a[0]);
@@ -192,6 +219,8 @@ export const Robot = ({
         setPosition(tmp);
       }
     }
+
+    updateCamera();
   });
 
   useMemo(() => {
@@ -206,8 +235,32 @@ export const Robot = ({
     <>
       {!isLoading && !error && data != null ? (
         <>
-          <TextObject ref={textRef}>{name}</TextObject>
-          <primitive position={initPosition} ref={roboRef} object={data} />
+          <group position={initPosition} ref={roboRef}>
+            <TextObject position={[0, 0.5, 1.5]}>{name}</TextObject>
+            <primitive object={data} />
+
+            <PerspectiveCamera
+              makeDefault={false}
+              fov={75}
+              position={[1, -0.5, 0]}
+              ref={cameraRef}
+            />
+
+            <mesh position={[0, 0.25, 0]}>
+              <cylinderGeometry args={[2, 2, 0.5, 32]} />
+              {/* radiusTop, radiusBottom, height, radialSegments */}
+              <meshStandardMaterial
+                color="green"
+                transparent={true}
+                opacity={0.2}
+              />
+
+              <mesh ref={boxRef} >
+                {/* <boxGeometry args={[.1,.1,.1]}/> */}
+                {/* <meshStandardMaterial color="tomato"/> */}
+              </mesh>
+            </mesh>
+          </group>
         </>
       ) : (
         "Error"

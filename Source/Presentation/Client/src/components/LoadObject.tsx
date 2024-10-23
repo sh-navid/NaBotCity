@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import { useGLTF } from "@react-three/drei";
 import { Endpoints } from "../configs/Endpoints";
+import { RigidBody } from "@react-three/rapier";
 
 export const LoadObject = ({
   endpoint = "",
@@ -27,7 +28,11 @@ export const Walls = () => {
 };
 
 export const Floor = () => {
-  return <LoadObject endpoint={Endpoints.Download("Floor")} />;
+  return (
+    <RigidBody type="fixed">
+      <LoadObject endpoint={Endpoints.Download("Floor")} />
+    </RigidBody>
+  );
 };
 
 export const Base = ({
