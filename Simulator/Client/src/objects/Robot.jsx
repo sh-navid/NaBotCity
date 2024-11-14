@@ -2,10 +2,10 @@ import * as THREE from 'three';
 import { Json } from "../utils/Json";
 import { useFrame } from "@react-three/fiber";
 import { Endpoints } from "../configs/Endpoints";
-import { Random } from "./../helpers/RandomHelper";
+import { Random } from "../helpers/RandomHelper";
 import { RobotHelper } from "../helpers/RobotHelper";
 import { Constraints } from "../configs/Constraints";
-import { TextObject } from "./../components/TextObject";
+import { TextObject } from "../components/TextObject";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { PerspectiveCamera, useGLTF } from "@react-three/drei";
 
