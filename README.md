@@ -8,7 +8,8 @@ ARobot
 ![](/Documents/Screenshots/ARobot.png)
 
 ## RuX Robot Simulator V0.3
-![](/Documents/Screenshots/V3.png)
+<!-- ![](/Documents/Screenshots/V3.png) -->
+![](/Documents/Screenshots/V3_PointCloud.png)
 
 ## RuX Modules
 - [ ] Simulator
