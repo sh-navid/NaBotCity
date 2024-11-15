@@ -7,8 +7,8 @@ HRobot V2 (Not simulated yet)
 ARobot
 ![](/Documents/Screenshots/ARobot.png)
 
-## RuX Robot Simulator V0.2
-![](/Documents/Screenshots/V2.png)
+## RuX Robot Simulator V0.3
+![](/Documents/Screenshots/V3.png)
 
 ## RuX Modules
 - [ ] Simulator
@@ -48,8 +48,13 @@ A list of sensors needs to be implemented
 ## Instruction
 <!-- - To convert models `npm install -g gltfjsx` and then `gltfjsx Model.gltf` -->
 - To run project
-    - npm run dev
-    - npm run start-react
+    - Open 2 terminals in program root and run these command in each
+    - `npm run dev`
+    - `npm run start-react`
+
+## ??
+- NN Model
+- GA Model
 
 
 <!-- ## Tasks
