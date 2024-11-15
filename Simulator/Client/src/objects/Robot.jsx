@@ -196,8 +196,8 @@ export const Robot = ({
     if (!isManual) {
       if (Math.random() < 0.01) {
         let i = Random.getInt(0, 4);
-        let p = Random.getInt(-1, 1) * (Math.PI / Random.getInt(1, 6));
-        // p = _robotHelper.checkInBound(i + 1, p);
+        let x = Random.getInt(-1, 2);
+        let p = (x * Math.PI) / Random.getInt(1, 10);
         let tmp = Json.clone(a);
         tmp[i] = p;
         setA(tmp);
@@ -205,7 +205,9 @@ export const Robot = ({
 
       if (Math.random() < 0.01) {
         let i = Random.getInt(0, 5);
-        let p = (Random.getInt(-1, 1) * Math.PI) / Random.getInt(1, 6);
+        let x = Random.getInt(-1, 2);
+        let p = (x * Math.PI) / Random.getInt(1, 10);
+        console.log("::", x);
         let tmp = Json.clone(b);
         tmp[i] = p;
         setB(tmp);

@@ -23,14 +23,10 @@ export const LoadObject = ({
   );
 };
 
-export const Walls = () => {
-  return <LoadObject endpoint={Endpoints.Download("Walls")} />;
-};
-
 export const Floor = () => {
   return (
     <RigidBody type="fixed">
-      <LoadObject endpoint={Endpoints.Download("Floor")} />
+      <LoadObject endpoint={Endpoints.Download("Floor2")} />
     </RigidBody>
   );
 };
