@@ -8,19 +8,16 @@ ARobot
 ![](/Documents/Screenshots/ARobot.png)
 
 ## RoboCity Simulator V0.3
-<!-- ![](/Documents/Screenshots/V3.png) -->
 ![](/Documents/Screenshots/V3_PointCloud.png)
 
 ## RoboCity Modules
 - [ ] Simulator
-<!-- - AI
-    - Hub
-    - Services
-    - Concepts -->
-- [ ] Assistant (Nabot)
-<!-- - [ ] OS -->
+- [ ] Assistant
+- [ ] OS
 - [ ] RDK (Robot Dev Kit)
 - [ ] Robot Designer
+- [ ] Robot App Store
+- [ ] MMO World
 
 ## RuX SRS Sensors
 A list of sensors needs to be implemented
@@ -47,18 +44,8 @@ A list of sensors needs to be implemented
 
 
 ## Instruction
-<!-- - To convert models `npm install -g gltfjsx` and then `gltfjsx Model.gltf` -->
 - To run project
     - Open 2 terminals in program root and run these command in each
     - `npm run dev`
     - `npm run start-react`
 
-## ??
-- NN Model
-- GA Model
-
-
-<!-- ## Tasks
-- [ ] Setup github pages
-- [ ] Setup Linkedin page
-- [ ] Setup new HRobot -->
