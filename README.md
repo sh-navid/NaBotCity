@@ -1,17 +1,17 @@
-# RuX
+# RoboCity
 RuX stands for Excellence Unmanned Robotics, a hobby project focused on simulating robotic systems. This project was built in just a few hours and is in the early stages. However, as future works, it should be possible to add more robots or make them custom. Various sensors and modules can be used in simulation. The possibility of writing and installing different software on each robot can be included. Add different steps to the simulator, to learn how to use each dynamic module in their own system, how to perform tasks collectively, how to know the environment and share information among themselves. A person should be able to plan them accurately. Like "go to point one and then rotate exactly 10 degrees" or do this with higher level commands like "pick up the red boxes and then place them on the table in order of size". 
 
-## RuX Robots
+## Robots of RoboCity
 HRobot V2 (Not simulated yet)
 ![](/Documents/Screenshots/HRobotV2.png)
 ARobot
 ![](/Documents/Screenshots/ARobot.png)
 
-## RuX Robot Simulator V0.3
+## RoboCity Simulator V0.3
 <!-- ![](/Documents/Screenshots/V3.png) -->
 ![](/Documents/Screenshots/V3_PointCloud.png)
 
-## RuX Modules
+## RoboCity Modules
 - [ ] Simulator
 <!-- - AI
     - Hub
