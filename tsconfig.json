@@ -2,17 +2,17 @@
   "compilerOptions": {
     "target": "es2020",
     "module": "commonjs",
-    "outDir": "Dist/Server",
-    "rootDir": "./Source",
+    "outDir": "Dist/Simulator/Server",
+    "rootDir": "./Simulator",
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true
   },
-  "include": ["Source/**/*.ts"],
+  "include": ["Simulator/**/*.ts"],
   "exclude": [
     "Tests",
     "node_modules",
-    "Source/**/*.test.ts",
-    "Source/Presentation/Client"
+    "Simulator/**/*.test.ts",
+    "Simulator/Client"
   ]
 }
