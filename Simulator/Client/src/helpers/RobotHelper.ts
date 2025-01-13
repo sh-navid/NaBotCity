@@ -17,6 +17,39 @@ export class RobotHelper implements IRobotHelper {
     return pos;
   }
 
+  rotateBase(robotData: any, pos: number, mv: number = 0.01): void {
+    if (robotData != null) {
+      var arm = robotData.getObjectByName(`Arm-Base`);
+      if (arm) {
+        arm.rotation.x = 0;
+        arm.rotation.z = 0;
+        if (mv === 0) {
+          arm.rotation.y = pos;
+        } else {
+          if (arm.rotation.y + mv < pos) {
+            arm.rotation.y += mv;
+          } else if (arm.rotation.y - mv > pos) {
+            arm.rotation.y -= mv;
+          } else {
+            arm.rotation.y = pos;
+          }
+        }
+      }
+    }
+  }
+
+  getBaseRotation(robotData: any) {
+    return robotData.getObjectByName(`Arm-Base`).rotation.y;
+  }
+
+  getArmARotation(robotData: any, no: number) {
+    return robotData.getObjectByName(`Arm${no}-A`).rotation.z;
+  }
+
+  getArmBRotation(robotData: any, no: number) {
+    return robotData.getObjectByName(`Arm${no}-B`).rotation.y;
+  }
+
   // FIXME: Change scene type from any to its true type
   // FIXME: Change type of no to Integer
   moveArmA(
@@ -41,6 +74,8 @@ export class RobotHelper implements IRobotHelper {
             arm.rotation.z += mv;
           } else if (arm.rotation.z - mv > pos) {
             arm.rotation.z -= mv;
+          } else {
+            arm.rotation.z = pos;
           }
         }
       }
@@ -73,6 +108,8 @@ export class RobotHelper implements IRobotHelper {
             arm.rotation.y += mv;
           } else if (arm.rotation.y - mv > pos) {
             arm.rotation.y -= mv;
+          } else {
+            arm.rotation.y = pos;
           }
         }
         arm.rotation.z = Math.PI;
