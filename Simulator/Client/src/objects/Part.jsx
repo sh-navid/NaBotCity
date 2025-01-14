@@ -1,33 +1,37 @@
-import { forwardRef, useEffect, useRef } from "react";
+import { forwardRef, useEffect, useMemo, useRef } from "react";
 import { Endpoints } from "../configs/Endpoints";
 import { useGLTF } from "@react-three/drei";
 
-export const Part = forwardRef(
-  ({ children, name, position, rotation }, ref) => {
-    const { scene, isLoading, error } = useGLTF(Endpoints.Download(name));
+export const Part = forwardRef(({ children, name, position, rotation }, ref) => {
+  const { scene, isLoading, error } = useGLTF(Endpoints.Download(name));
 
-    if (isLoading) return null;
-    if (error)
-      return (
-        <mesh position={position} rotation={rotation} ref={ref}>
-          <boxBufferGeometry />
-          <meshStandardMaterial color="red" />
-          {children}
-        </mesh>
-      );
+  // Avoid unnecessary cloning
+  const clonedScene = useMemo(() => {
+    return scene ? scene.clone() : null;
+  }, [scene]);
 
+  if (isLoading) return null;
+  if (error)
     return (
-      <primitive
-        position={position}
-        rotation={rotation}
-        ref={ref}
-        object={scene.clone()}
-      >
+      <mesh position={position} rotation={rotation} ref={ref}>
+        <boxBufferGeometry />
+        <meshStandardMaterial color="red" />
         {children}
-      </primitive>
+      </mesh>
     );
-  }
-);
+
+  return (
+    <primitive
+      position={position}
+      rotation={rotation}
+      ref={ref}
+      object={clonedScene}
+    >
+      {children}
+    </primitive>
+  );
+});
+
 
 export const Motor = ({ children, position, rotation, angle }) => {
   const motorRef = useRef();
@@ -37,13 +41,15 @@ export const Motor = ({ children, position, rotation, angle }) => {
     if (motorRef.current) {
       const shaft = motorRef.current.getObjectByName("Shaft");
       if (shaft) {
-        shaft.rotation.x = angle;
-        if (shaftRef.current) {
+        shaft.rotation.x = angle; 
+
+        // Check if shaftRef.current is already a child of shaft
+        if (shaftRef.current && !shaft.children.includes(shaftRef.current)) {
           shaft.add(shaftRef.current);
         }
       }
     }
-  }, [angle, children]);
+  }, [angle, children]); 
 
   return (
     <Part name={"Motor"} position={position} rotation={rotation} ref={motorRef}>
@@ -51,3 +57,4 @@ export const Motor = ({ children, position, rotation, angle }) => {
     </Part>
   );
 };
+
