@@ -1,10 +1,10 @@
 import { forwardRef, useEffect, useMemo, useRef } from "react";
 import { Endpoints } from "../configs/Endpoints";
 import { useGLTF } from "@react-three/drei";
-import { RigidBody } from "@react-three/rapier";
+
 
 export const Part = forwardRef(
-  ({ children, name, position, rotation, physics = false }, ref) => {
+  ({ children, name, position, rotation }, ref) => {
     const { scene, isLoading, error } = useGLTF(Endpoints.Download(name));
 
     // Avoid unnecessary cloning
@@ -22,23 +22,7 @@ export const Part = forwardRef(
         </mesh>
       );
 
-    return physics ? (
-      <RigidBody
-        mass={100}
-        restitution={0.1}
-        //colliders={"box"}
-        position={[0, 0, 0]}
-      >
-        <primitive
-          position={position}
-          rotation={rotation}
-          ref={ref}
-          object={clonedScene}
-        >
-          {children}
-        </primitive>
-      </RigidBody>
-    ) : (
+    return (
       <primitive
         position={position}
         rotation={rotation}
