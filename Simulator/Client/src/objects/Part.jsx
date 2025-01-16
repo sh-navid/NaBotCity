@@ -4,7 +4,7 @@ import { useGLTF } from "@react-three/drei";
 
 
 export const Part = forwardRef(
-  ({ children, name, position, rotation }, ref) => {
+  ({ children, name, position, rotation,scale }, ref) => {
     const { scene, isLoading, error } = useGLTF(Endpoints.Download(name));
 
     // Avoid unnecessary cloning
@@ -15,7 +15,7 @@ export const Part = forwardRef(
     if (isLoading) return null;
     if (error)
       return (
-        <mesh position={position} rotation={rotation} ref={ref}>
+        <mesh position={position} rotation={rotation} scale={scale} ref={ref}>
           <boxBufferGeometry />
           <meshStandardMaterial color="red" />
           {children}
@@ -26,6 +26,7 @@ export const Part = forwardRef(
       <primitive
         position={position}
         rotation={rotation}
+        scale={scale}
         ref={ref}
         object={clonedScene}
       >
