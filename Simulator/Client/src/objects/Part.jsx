@@ -1,11 +1,15 @@
-import { forwardRef, useEffect, useMemo, useRef } from "react";
+import React, { forwardRef, useEffect, useMemo, useRef } from "react";
 import { Endpoints } from "../configs/Endpoints";
 import { useGLTF } from "@react-three/drei";
-
+import { useFixedJoint, useRevoluteJoint } from "@react-three/rapier";
 
 export const Part = forwardRef(
-  ({ children, name, position, rotation,scale }, ref) => {
+  ({ children, name, position, rotation, scale }, ref) => {
     const { scene, isLoading, error } = useGLTF(Endpoints.Download(name));
+
+    scale = scale ?? [1, 1, 1];
+    position = position ?? [0, 0, 0];
+    rotation = rotation ?? [0, 0, 0];
 
     // Avoid unnecessary cloning
     const clonedScene = useMemo(() => {
@@ -36,6 +40,9 @@ export const Part = forwardRef(
   }
 );
 
+/*
+@deprecated
+*/
 export const Motor = ({
   children,
   position,
@@ -67,4 +74,27 @@ export const Motor = ({
       <group ref={shaftRef}>{children}</group>
     </Part>
   );
+};
+
+export const FixedJoint = ({ part1, part2, part1Anchor, part2Anchor }) => {
+  useFixedJoint(part1, part2, [
+    part1Anchor,
+    [0, 0, 0, 1],
+    part2Anchor,
+    [0, 0, 0, 1],
+  ]);
+
+  return null;
+};
+
+export const RevoluteJoint = ({
+  part1,
+  part2,
+  part1Anchor,
+  part2Anchor,
+  rotationAxis,
+}) => {
+  useRevoluteJoint(part1, part2, [part1Anchor, part2Anchor, rotationAxis]);
+
+  return null;
 };

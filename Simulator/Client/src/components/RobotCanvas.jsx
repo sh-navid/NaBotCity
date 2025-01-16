@@ -17,6 +17,7 @@ const RobotCanvas = ({ children, camPosition =[-12, 12, 12]}) => {
       frameloop="demand"
       style={FullCanvasStyle}
       camera={{ position: camPosition, fov: 45 }}
+      shadows
     >
       <Physics debug={true} gravity={[0, -9.81, 0]}>
         <ambientLight intensity={1} />

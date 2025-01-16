@@ -10,7 +10,7 @@ export const GRobot4 = ({ position = [0, 0.5, 0] }) => {
 
   useEffect(() => {
     let i = setInterval(() => {
-      setAngle(angle + 0.01);
+      setAngle(angle + 0.1);
     }, 30);
 
     return () => clearInterval(i);
