@@ -1,5 +1,5 @@
+import { Part } from "../objects/Part";
 import { ARobotL1 } from "../objects/ARobotL1";
-import { Floor } from "../components/LoadObject";
 import RobotCanvas from "../components/RobotCanvas";
 
 const pos = [
@@ -24,7 +24,7 @@ export const ALevel1 = () => {
           movement={p.movement}
         />
       ))}
-      <Floor />
+       <Part name="Floor3"/>
     </RobotCanvas>
   );
 };
