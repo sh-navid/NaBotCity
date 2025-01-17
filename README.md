@@ -10,6 +10,11 @@ ARobot
 ## RoboCity Simulator V0.3
 ![](/Documents/Screenshots/V3_PointCloud.png)
 
+## TODO
+- [ ] Reimport all Grobots with new JSON structure and RobotGenerator module 
+- [ ] Reimport ARobot and HRobot with new JSON structure and RobotGenerator module
+- [ ] Make scenes available with socket io on all tabs
+
 ## RoboCity Modules
 - [ ] Simulator
 - [ ] Assistant
