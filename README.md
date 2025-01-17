@@ -7,10 +7,16 @@ HRobot V2 (Not simulated yet)
 ARobot
 ![](/Documents/Screenshots/ARobot.png)
 
+## RoboCity Simulator V0.4
+Now we are able to make our customized robots
+![](/Documents/Screenshots/V4.png)
+
 ## RoboCity Simulator V0.3
 ![](/Documents/Screenshots/V3_PointCloud.png)
 
+
 ## TODO
+- [ ] Try to design first sketch of robocity
 - [ ] Reimport all Grobots with new JSON structure and RobotGenerator module 
 - [ ] Reimport ARobot and HRobot with new JSON structure and RobotGenerator module
 - [ ] Make scenes available with socket io on all tabs
