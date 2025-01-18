@@ -61,31 +61,71 @@ export const GRobot6 = ({ position }) => {
     };
   }, []);
 
+  let front = 3;
+
   const Parts = [
     {
-      model: "Base1",
-      position: [0, 0, 0],
-      physics: { colliders: "hull" },
-      uid: "FrontBody",
-      parts: [],
+      model: "Group",
+      position: [front, 0, 0],
+      physics: null,
+      uid: "Front",
+      parts: [
+        {
+          model: "Base1",
+          position: [0, 0, 0],
+          physics: {colliders: "trimesh"},
+          uid: "FrontBody",
+          parts: [],
+        },
+        {
+          model: "Wheel1",
+          physics: {colliders: "hull"},
+          rotation: [Math.PI / 2, 0, 0],
+          position: [0, 0, -1.5],
+          uid: "FrontRightWheel",
+        },
+        {
+          model: "Wheel1",
+          physics: {colliders: "hull"},
+          rotation: [Math.PI / 2, 0, 0],
+          position: [0, 0, 1.5],
+          uid: "FrontLeftWheel",
+        },
+      ],
     },
+    // -----------------------------------------
     {
-      model: "Wheel1",
-      physics: { colliders: "hull" },
-      rotation: [Math.PI / 2, 0, 0],
-      position: [0, 0, -2],
-      uid: "FrontRightWheel",
-    },
-    {
-      model: "Wheel1",
-      physics: { colliders: "hull" },
-      rotation: [Math.PI / 2, 0, 0],
-      position: [0, 0, 2],
-      uid: "FrontLeftWheel",
+      model: "Group",
+      position: [-front, 0, 0],
+      physics: null,
+      uid: "Rear",
+      parts: [
+        {
+          model: "Base1",
+          position: [0, 0, 0],
+          physics: {colliders: "trimesh"},
+          uid: "RearBody",
+          parts: [],
+        },
+        {
+          model: "Wheel1",
+          physics: {colliders: "hull"},
+          rotation: [Math.PI / 2, 0, 0],
+          position: [0, 0, -1.5],
+          uid: "RearRightWheel",
+        },
+        {
+          model: "Wheel1",
+          physics: {colliders: "hull"},
+          rotation: [Math.PI / 2, 0, 0],
+          position: [0, 0, 1.5],
+          uid: "RearLeftWheel",
+        },
+      ],
     },
   ];
 
-  const Joints = [
+  const RevoluteJoints = [
     {
       part1: "FrontBody",
       anchor1: [0, 0, 0],
@@ -98,9 +138,42 @@ export const GRobot6 = ({ position }) => {
       part2: "FrontLeftWheel",
       anchor2: [0, 0, 0],
     },
+    {
+      part1: "RearBody",
+      anchor1: [0, 0, 0],
+      part2: "RearRightWheel",
+      anchor2: [0, 0, 0],
+    },
+    {
+      part1: "RearBody",
+      anchor1: [0, 0, 0],
+      part2: "RearLeftWheel",
+      anchor2: [0, 0, 0],
+    },
+  ];
+
+  const FixedJoints = [
+    {
+      part1: "RearBody",
+      anchor1: [-front, 0, 0],
+      part2: "FrontBody",
+      anchor2: [front, 0, 0],
+    },
   ];
 
   const PartSelector = ({ part }) => {
+    if (part.model === "Group")
+      return (
+        <group
+          key={"group-" + part.uid}
+          name={part.model}
+          {...part}
+          ref={PartRef.current[part.uid]}
+        >
+          {part.parts && part.parts.length > 0 && renderParts(part.parts)}{" "}
+        </group>
+      );
+
     return (
       <>
         {part.model === "Motor" ? (
@@ -152,16 +225,35 @@ export const GRobot6 = ({ position }) => {
     });
   };
 
+  const [renderFixedJoints, setRenderFixedJoints] = useState(false);
+
+  useEffect(() => {
+    const fixedTimeout = setTimeout(() => {
+      setRenderFixedJoints(true);
+    }, 2000); 
+    return () => clearTimeout(fixedTimeout);
+  }, []);
+
   return (
     <>
       <group position={position}>{renderParts(Parts)}</group>
-      {Joints.map((j) => (
+
+      {renderFixedJoints && RevoluteJoints.map((j) => (
         <RevoluteJoint
           part1={PhysicsRef.current[j.part1]}
           part2={PhysicsRef.current[j.part2]}
           part1Anchor={j.anchor1 ?? [0, 0, 0]}
           part2Anchor={j.anchor2 ?? [0, 0, 0]}
           rotationAxis={j.axis ?? [0, 0, 1]}
+        />
+      ))}
+
+      {renderFixedJoints && FixedJoints.map((j) => (
+        <FixedJoint
+          part1={PhysicsRef.current[j.part1]}
+          part2={PhysicsRef.current[j.part2]}
+          part1Anchor={j.anchor1 ?? [0, 0, 0]}
+          part2Anchor={j.anchor2 ?? [0, 0, 0]}
         />
       ))}
     </>
