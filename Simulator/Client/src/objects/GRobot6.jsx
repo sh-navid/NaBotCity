@@ -4,13 +4,11 @@ import { FixedJoint, Motor, Part, RevoluteJoint } from "./Part";
 
 export const GRobot6 = ({ position }) => {
   const bodyRef = useRef();
-  const objectRef = useRef();
-  const PhysicsRef = useRef({});
   const PartRef = useRef({});
+  const PhysicsRef = useRef({});
 
   const [angle, setAngle] = useState(0);
 
-  // Initialize the robot's position
   useEffect(() => {
     if (bodyRef.current) {
       bodyRef.current.setTranslation({
@@ -39,22 +37,21 @@ export const GRobot6 = ({ position }) => {
     }
   };
 
-  // Example of applying impulse on key press
   useEffect(() => {
     const handleKeyDown = (event) => {
       PhysicsRef.current["FrontLeftWheel"].current?.wakeUp();
       PhysicsRef.current["FrontRightWheel"].current?.wakeUp();
       if (event.key === "ArrowUp") {
-        applyImpulse(2); // Adjust force as needed
+        applyImpulse(2);
       }
       if (event.key === "ArrowDown") {
-        applyImpulse(-2); // Adjust force as needed
+        applyImpulse(-2);
       }
 
-      if (event.key === "r") {
-        objectRef.current?.wakeUp();
-        objectRef.current.setTranslation({ x: 0, y: 5, z: 0 }, true); // Wake the body after setting position
-      }
+      // if (event.key === "r") {
+      //   objectRef.current?.wakeUp();
+      //   objectRef.current.setTranslation({ x: 0, y: 5, z: 0 }, true); // Wake the body after setting position
+      // }
     };
 
     window.addEventListener("keydown", handleKeyDown);
@@ -64,8 +61,7 @@ export const GRobot6 = ({ position }) => {
     };
   }, []);
 
-  // Define the robot's structure
-  const Sketch = [
+  const Parts = [
     {
       model: "Base1",
       position: [0, 0, 0],
@@ -79,11 +75,6 @@ export const GRobot6 = ({ position }) => {
       rotation: [Math.PI / 2, 0, 0],
       position: [0, 0, -2],
       uid: "FrontRightWheel",
-      joint: {
-        type: "Revolute",
-        body: "FrontBody",
-        anchor: [0, 0, -2],
-      },
     },
     {
       model: "Wheel1",
@@ -91,10 +82,21 @@ export const GRobot6 = ({ position }) => {
       rotation: [Math.PI / 2, 0, 0],
       position: [0, 0, 2],
       uid: "FrontLeftWheel",
-      joint: {
-        type: "Revolute",
-        body: "FrontBody",
-      },
+    },
+  ];
+
+  const Joints = [
+    {
+      part1: "FrontBody",
+      anchor1: [0, 0, 0],
+      part2: "FrontRightWheel",
+      anchor2: [0, 0, 0],
+    },
+    {
+      part1: "FrontBody",
+      anchor1: [0, 0, 0],
+      part2: "FrontLeftWheel",
+      anchor2: [0, 0, 0],
     },
   ];
 
@@ -121,41 +123,12 @@ export const GRobot6 = ({ position }) => {
             {part.parts && part.parts.length > 0 && renderParts(part.parts)}{" "}
           </Part>
         )}
-
-        {part.joint ? (
-          part.joint.type === "Revolute" ? (
-            <RevoluteJoint
-              part1={PhysicsRef.current[part.joint.body]}
-              part2={PhysicsRef.current[part.uid]}
-              part1Anchor={part.joint.bodyAnchor ?? [0, 0, 0]}
-              part2Anchor={part.joint.anchor ?? [0, 0, 0]}
-              rotationAxis={part.joint.axis ?? [0, 0, 1]}
-            />
-          ) : (
-            <FixedJoint
-              part1={PhysicsRef.current[part.joint.body]}
-              part2={PhysicsRef.current[part.uid]}
-              part1Anchor={part.joint.bodyAnchor ?? [0, 0, 0]}
-              part2Anchor={part.joint.anchor ?? [0, 0, 0]}
-            />
-          )
-        ) : null}
       </>
     );
   };
 
   const renderParts = (parts) => {
     return parts.map((part) => {
-      {
-        console.log(part.uid);
-      }
-      {
-        console.log(PhysicsRef);
-      }
-      {
-        console.log(PartRef);
-      }
-
       if (!PhysicsRef.current[part.uid]) {
         PhysicsRef.current[part.uid] = createRef();
       }
@@ -179,5 +152,18 @@ export const GRobot6 = ({ position }) => {
     });
   };
 
-  return <group position={position}>{renderParts(Sketch)}</group>;
+  return (
+    <>
+      <group position={position}>{renderParts(Parts)}</group>
+      {Joints.map((j) => (
+        <RevoluteJoint
+          part1={PhysicsRef.current[j.part1]}
+          part2={PhysicsRef.current[j.part2]}
+          part1Anchor={j.anchor1 ?? [0, 0, 0]}
+          part2Anchor={j.anchor2 ?? [0, 0, 0]}
+          rotationAxis={j.axis ?? [0, 0, 1]}
+        />
+      ))}
+    </>
+  );
 };

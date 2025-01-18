@@ -38,12 +38,12 @@ export const GRobot5 = ({ position }) => {
   // Example of applying impulse on key press
   useEffect(() => {
     const handleKeyDown = (event) => {
+      PhysicsRef.current["FrontLeftWheel"].current?.wakeUp();
+        PhysicsRef.current["FrontRightWheel"].current?.wakeUp();
       if (event.key === "ArrowUp") {
-        PhysicsRef.current["FrontLeftWheel"].current?.wakeUp();
         applyImpulse(2); // Adjust force as needed
       }
       if (event.key === "ArrowDown") {
-        PhysicsRef.current["FrontRightWheel"].current?.wakeUp();
         applyImpulse(-2); // Adjust force as needed
       }
 
