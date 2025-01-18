@@ -61,7 +61,7 @@ export const GRobot6 = ({ position }) => {
     };
   }, []);
 
-  let front = 3;
+  let front = 2;
 
   const Parts = [
     {
@@ -73,20 +73,20 @@ export const GRobot6 = ({ position }) => {
         {
           model: "Base1",
           position: [0, 0, 0],
-          physics: {colliders: "trimesh"},
+          physics: { colliders: "trimesh" },
           uid: "FrontBody",
           parts: [],
         },
         {
           model: "Wheel1",
-          physics: {colliders: "hull"},
+          physics: { colliders: "hull" },
           rotation: [Math.PI / 2, 0, 0],
           position: [0, 0, -1.5],
           uid: "FrontRightWheel",
         },
         {
           model: "Wheel1",
-          physics: {colliders: "hull"},
+          physics: { colliders: "hull" },
           rotation: [Math.PI / 2, 0, 0],
           position: [0, 0, 1.5],
           uid: "FrontLeftWheel",
@@ -103,26 +103,34 @@ export const GRobot6 = ({ position }) => {
         {
           model: "Base1",
           position: [0, 0, 0],
-          physics: {colliders: "trimesh"},
+          physics: { colliders: "trimesh" },
           uid: "RearBody",
           parts: [],
         },
         {
           model: "Wheel1",
-          physics: {colliders: "hull"},
+          physics: { colliders: "hull" },
           rotation: [Math.PI / 2, 0, 0],
           position: [0, 0, -1.5],
           uid: "RearRightWheel",
         },
         {
           model: "Wheel1",
-          physics: {colliders: "hull"},
+          physics: { colliders: "hull" },
           rotation: [Math.PI / 2, 0, 0],
           position: [0, 0, 1.5],
           uid: "RearLeftWheel",
         },
+        {
+          model: "Base3",
+          position: [0, 2, 0],
+          physics: { colliders: "hull" },
+          uid: "Arm1",
+          parts: [],
+        },
       ],
     },
+        // -----------------------------------------
   ];
 
   const RevoluteJoints = [
@@ -159,6 +167,12 @@ export const GRobot6 = ({ position }) => {
       part2: "FrontBody",
       anchor2: [front, 0, 0],
     },
+    // {
+    //   part1: "RearBody",
+    //   anchor1: [0, 0, 0],
+    //   part2: "Arm1",
+    //   anchor2: [0, 2, 0],
+    // },
   ];
 
   const PartSelector = ({ part }) => {
@@ -230,7 +244,7 @@ export const GRobot6 = ({ position }) => {
   useEffect(() => {
     const fixedTimeout = setTimeout(() => {
       setRenderFixedJoints(true);
-    }, 2000); 
+    }, 1000);
     return () => clearTimeout(fixedTimeout);
   }, []);
 
@@ -238,24 +252,26 @@ export const GRobot6 = ({ position }) => {
     <>
       <group position={position}>{renderParts(Parts)}</group>
 
-      {renderFixedJoints && RevoluteJoints.map((j) => (
-        <RevoluteJoint
-          part1={PhysicsRef.current[j.part1]}
-          part2={PhysicsRef.current[j.part2]}
-          part1Anchor={j.anchor1 ?? [0, 0, 0]}
-          part2Anchor={j.anchor2 ?? [0, 0, 0]}
-          rotationAxis={j.axis ?? [0, 0, 1]}
-        />
-      ))}
+      {renderFixedJoints &&
+        RevoluteJoints.map((j) => (
+          <RevoluteJoint
+            part1={PhysicsRef.current[j.part1]}
+            part2={PhysicsRef.current[j.part2]}
+            part1Anchor={j.anchor1 ?? [0, 0, 0]}
+            part2Anchor={j.anchor2 ?? [0, 0, 0]}
+            rotationAxis={j.axis ?? [0, 0, 1]}
+          />
+        ))}
 
-      {renderFixedJoints && FixedJoints.map((j) => (
-        <FixedJoint
-          part1={PhysicsRef.current[j.part1]}
-          part2={PhysicsRef.current[j.part2]}
-          part1Anchor={j.anchor1 ?? [0, 0, 0]}
-          part2Anchor={j.anchor2 ?? [0, 0, 0]}
-        />
-      ))}
+      {renderFixedJoints &&
+        FixedJoints.map((j) => (
+          <FixedJoint
+            part1={PhysicsRef.current[j.part1]}
+            part2={PhysicsRef.current[j.part2]}
+            part1Anchor={j.anchor1 ?? [0, 0, 0]}
+            part2Anchor={j.anchor2 ?? [0, 0, 0]}
+          />
+        ))}
     </>
   );
 };
