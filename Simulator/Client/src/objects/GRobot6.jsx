@@ -1,6 +1,8 @@
 import { RigidBody } from "@react-three/rapier";
 import { useRef, useEffect, createRef, useState } from "react";
 import { FixedJoint, Motor, Part, RevoluteJoint } from "./Part";
+import { useFrame } from "@react-three/fiber";
+import * as THREE from "three";
 
 export const GRobot6 = ({ position }) => {
   const bodyRef = useRef();
@@ -60,6 +62,42 @@ export const GRobot6 = ({ position }) => {
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, []);
+
+  useFrame(() => {
+    FollowJoint.forEach((joint) => {
+      try {
+        const part1 = PartRef.current[joint.part1]?.current;
+        const part2 = PhysicsRef.current[joint.part2]?.current;
+
+        if (!part1 || !part2) {
+          return;
+        }
+
+        const worldPosition = new THREE.Vector3();
+        part1.getWorldPosition(worldPosition);
+
+        part2.wakeUp();
+        part2.setTranslation(
+          { x: worldPosition.x, y: worldPosition.y, z: worldPosition.z },
+          true
+        );
+
+        const worldQuaternion = new THREE.Quaternion();
+        part1.getWorldQuaternion(worldQuaternion);
+
+        if (part2.setRotation) {
+          part2.setRotation({
+            x: worldQuaternion.x,
+            y: worldQuaternion.y,
+            z: worldQuaternion.z,
+            w: worldQuaternion.w,
+          });
+        }
+      } catch (error) {
+        console.error("Error updating positions and rotations:", error);
+      }
+    });
+  });
 
   let front = 2;
 
@@ -121,16 +159,51 @@ export const GRobot6 = ({ position }) => {
           position: [0, 0, 1.5],
           uid: "RearLeftWheel",
         },
+      ],
+    },
+    // -----------------------------------------
+    {
+      model: "Motor",
+      position: [-front, 2, 0],
+      rotation: [0, 0, Math.PI / 2],
+      physics: { type: "fixed", colliders: "hull" },
+      uid: "ArmBase1Motor",
+      parts: [
         {
           model: "Base3",
-          position: [0, 2, 0],
-          physics: { colliders: "hull" },
-          uid: "Arm1",
-          parts: [],
+          position: [0.6, 0, 0],
+          rotation: [0, 0, -Math.PI / 2],
+          physics: null,
+          uid: "ArmBase1",
+          parts: [
+            {
+              model: "Motor",
+              position: [1.1, 0, 0],
+              physics: null,
+              uid: "ArmBase1Motor",
+              parts: [
+                {
+                  model: "Base3",
+                  position: [0.6, 0, 0],
+                  rotation: [0, 0, Math.PI / 2],
+                  physics: null,
+                  uid: "ArmBase2",
+                  parts: [
+                    {
+                      model: "Motor",
+                      position: [1.1, 0, 0],
+                      physics: null,
+                      uid: "ArmBase2Motor",
+                      parts: [],
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
         },
       ],
     },
-        // -----------------------------------------
   ];
 
   const RevoluteJoints = [
@@ -167,12 +240,13 @@ export const GRobot6 = ({ position }) => {
       part2: "FrontBody",
       anchor2: [front, 0, 0],
     },
-    // {
-    //   part1: "RearBody",
-    //   anchor1: [0, 0, 0],
-    //   part2: "Arm1",
-    //   anchor2: [0, 2, 0],
-    // },
+  ];
+
+  const FollowJoint = [
+    {
+      part1: "RearBody",
+      part2: "ArmBase1Motor",
+    },
   ];
 
   const PartSelector = ({ part }) => {
