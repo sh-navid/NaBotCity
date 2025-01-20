@@ -50,10 +50,9 @@ export const GRobot6 = ({ position }) => {
         applyImpulse(-2);
       }
 
-      // if (event.key === "r") {
-      //   objectRef.current?.wakeUp();
-      //   objectRef.current.setTranslation({ x: 0, y: 5, z: 0 }, true); // Wake the body after setting position
-      // }
+      if (event.key === "u") {
+        setAngle(angle + Math.PI / 6);
+      }
     };
 
     window.addEventListener("keydown", handleKeyDown);
@@ -88,7 +87,7 @@ export const GRobot6 = ({ position }) => {
         if (part2.setRotation) {
           part2.setRotation({
             x: worldQuaternion.x,
-            y: worldQuaternion.y,
+            y: worldQuaternion.y + angle,
             z: worldQuaternion.z,
             w: worldQuaternion.w,
           });
@@ -269,7 +268,6 @@ export const GRobot6 = ({ position }) => {
             key={"part-" + part.uid}
             name={part.model}
             {...part}
-            angle={angle}
             ref={PartRef.current[part.uid]}
           >
             {part.parts && part.parts.length > 0 && renderParts(part.parts)}{" "}
@@ -300,7 +298,7 @@ export const GRobot6 = ({ position }) => {
       if (part.physics) {
         return (
           <RigidBody
-          restitution={0.1} // bounciness
+            restitution={0} // bounciness
             key={"rigidbody-" + part.uid}
             {...part.physics}
             ref={PhysicsRef.current[part.uid]}
@@ -319,7 +317,7 @@ export const GRobot6 = ({ position }) => {
   useEffect(() => {
     const fixedTimeout = setTimeout(() => {
       setRenderFixedJoints(true);
-    }, 1000);
+    }, 100);
     return () => clearTimeout(fixedTimeout);
   }, []);
 
