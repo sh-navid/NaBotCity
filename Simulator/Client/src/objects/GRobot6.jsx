@@ -300,6 +300,7 @@ export const GRobot6 = ({ position }) => {
       if (part.physics) {
         return (
           <RigidBody
+          restitution={0.1} // bounciness
             key={"rigidbody-" + part.uid}
             {...part.physics}
             ref={PhysicsRef.current[part.uid]}
