@@ -5,7 +5,7 @@ import { quat, RigidBody } from "@react-three/rapier";
 import { useRef, useEffect, createRef, useState } from "react";
 import { FixedJoint, Motor, Part, RevoluteJoint } from "./Part";
 
-export const GRobot7 = ({ position }) => {
+export const ARobotNew2 = ({ position }) => {
   const bodyRef = useRef();
   const PartRef = useRef({});
   const PhysicsRef = useRef({});
@@ -89,26 +89,26 @@ export const GRobot7 = ({ position }) => {
         }
       }
 
-      if (event.key === "m") {
-        if (boxRef.current) {
-          const currentPosition = boxRef.current.translation();
+      // if (event.key === "m") {
+      //   if (boxRef.current) {
+      //     const currentPosition = boxRef.current.translation();
 
-          const forwardVector = new THREE.Vector3(-0.1, 0, 0);
-          const rotation = boxRef.current.rotation();
+      //     const forwardVector = new THREE.Vector3(-0.1, 0, 0);
+      //     const rotation = boxRef.current.rotation();
 
-          forwardVector.applyEuler(
-            new THREE.Euler(rotation.x, rotation.y, rotation.z)
-          );
+      //     forwardVector.applyEuler(
+      //       new THREE.Euler(rotation.x, rotation.y, rotation.z)
+      //     );
 
-          const newPosition = {
-            x: currentPosition.x + forwardVector.x,
-            y: currentPosition.y + forwardVector.y,
-            z: currentPosition.z + forwardVector.z,
-          };
+      //     const newPosition = {
+      //       x: currentPosition.x + forwardVector.x,
+      //       y: currentPosition.y + forwardVector.y,
+      //       z: currentPosition.z + forwardVector.z,
+      //     };
 
-          boxRef.current.setNextKinematicTranslation(newPosition);
-        }
-      }
+      //     boxRef.current.setNextKinematicTranslation(newPosition);
+      //   }
+      // }
     };
 
     window.addEventListener("keydown", handleKeyDown);
@@ -154,121 +154,80 @@ export const GRobot7 = ({ position }) => {
     });
   });
 
+  const COUNT = 8;
+  const M_POS = 1.12;
+  const D_SCALE = 0.9;
+
+  const [mAngle, setMAngle] = useState(Array(COUNT).fill(0));
+  const [xAngle, setXAngle] = useState(Array(COUNT).fill(0));
+
+  useEffect(() => {
+    const SPEED = 0.01;
+    const updateAngles = (angles) => angles.map((angle) => angle + SPEED);
+
+    const intervalId = setInterval(() => {
+      setMAngle((prevMAngle) => updateAngles(prevMAngle));
+      setXAngle((prevXAngle) => updateAngles(prevXAngle));
+    }, 30);
+
+    return () => clearInterval(intervalId);
+  }, []);
+
+  const M = (index, parts = [], y = 0) => {
+    return [
+      {
+        model: "Motor1",
+        position: [0, y, 0],
+        physics: { type: "kinematicPosition", colliders:false },
+        uid: "M" + index,
+        parts: [
+          {
+            model: "Shaft1",
+            position: [0, -0.2, 0],
+            rotation: [0, mAngle[index], 0],
+            scale: [D_SCALE, D_SCALE, D_SCALE],
+            physics: null,
+            uid: "S" + index,
+            parts: [
+              {
+                model: "Motor2",
+                position: [0, M_POS, 0],
+                physics: null,
+                uid: "XM" + index,
+                parts: [
+                  {
+                    model: "Shaft2",
+                    position: [0, 0, 0],
+                    rotation: [0, 0, xAngle[index]],
+                    scale: [D_SCALE, D_SCALE, D_SCALE],
+                    physics: null,
+                    uid: "XS" + index,
+                    parts: parts,
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      },
+    ];
+  };
+
+  const MCount = (index, parts = [], y = 1) => {
+    if (index > 0) {
+      return MCount(index - 1, M(index, parts, y), y);
+    } else {
+      return M(0, parts, 0.2);
+    }
+  };
+
   const Parts = [
     {
-      model: "Base12",
-      position: [0, 4, 0],
+      model: "Body3",
+      position: [0, 0.5, 0],
       physics: null,
-      uid: "Pelvis",
-      parts: [
-        {
-          model: "MotorBase",
-          position: [0, 0.4, 0],
-          rotation: [0, 0, Math.PI / 2],
-          physics: null,
-          uid: "BackBoneMotorBase",
-          parts: [
-            {
-              model: "MotorShaft",
-              position: [0, 0, 0],
-              rotation: [0, 0, 0],
-              physics: null,
-              uid: "BackBoneMotorShaft",
-              parts: [
-                {
-                  model: "Base4",
-                  position: [1.1, 0, 0],
-                  rotation: [0, 0, -Math.PI/2],
-                  physics: null,
-                  uid: "Body",
-                  parts: [],
-                },
-              ],
-            },
-          ],
-        },
-        {
-          model: "MotorBase",
-          position: [0, 0, 1.1],
-          rotation: [0, -Math.PI / 2, 0],
-          physics: null,
-          uid: "PelvisRightMotorBase",
-          parts: [
-            {
-              model: "MotorShaft",
-              position: [0, 0, 0],
-              physics: null,
-              uid: "PelvisRightMotorShaft",
-              parts: [
-                {
-                  model: "Base32",
-                  position: [0.4, 0, 0],
-                  rotation: [0, 0, -Math.PI / 2],
-                  physics: null,
-                  uid: "PelvisRightLeg",
-                  parts: [
-                    {
-                      model: "MotorBase",
-                      position: [1.1, 0, 0],
-                      rotation: [0, 0, 0],
-                      physics: null,
-                      uid: "LegRightMotorBase",
-                      parts: [
-                        {
-                          model: "MotorShaft",
-                          position: [0, 0, 0],
-                          physics: null,
-                          uid: "LegRightMotorShaft",
-                          parts: [
-                            {
-                              model: "Base32",
-                              position: [1.1, 0, 0],
-                              rotation: [0, 0, -Math.PI],
-                              physics: null,
-                              uid: "RightLeg",
-                              parts: [
-                                {
-                                  model: "MotorBase",
-                                  position: [0, 0, 0],
-                                  rotation: [0, Math.PI / 2, -Math.PI / 2],
-                                  physics: null,
-                                  uid: "LegRightMotorBase",
-                                  parts: [
-                                    {
-                                      model: "MotorShaft",
-                                      position: [0, 0, 0],
-                                      physics: null,
-                                      uid: "LegRightMotorShaft",
-                                      parts: [
-                                        {
-                                          model: "Base5",
-                                          position: [0, 0, 0],
-                                          rotation: [
-                                            -Math.PI / 2,
-                                            Math.PI,
-                                            Math.PI / 2,
-                                          ],
-                                          physics: null,
-                                          uid: "RightLeg",
-                                          parts: [],
-                                        },
-                                      ],
-                                    },
-                                  ],
-                                },
-                              ],
-                            },
-                          ],
-                        },
-                      ],
-                    },
-                  ],
-                },
-              ],
-            },
-          ],
-        },
-      ],
+      uid: "Base",
+      parts: MCount(COUNT),
     },
   ];
 
@@ -324,7 +283,7 @@ export const GRobot7 = ({ position }) => {
           {...part}
           ref={PartRef.current[part.uid]}
         >
-          {part.parts && part.parts.length > 0 && renderParts(part.parts)}{" "}
+          {part.parts && part.parts.length > 0 && renderParts(part.parts)}
         </group>
       );
 
@@ -337,7 +296,7 @@ export const GRobot7 = ({ position }) => {
             {...part}
             ref={PartRef.current[part.uid]}
           >
-            {part.parts && part.parts.length > 0 && renderParts(part.parts)}{" "}
+            {part.parts && part.parts.length > 0 && renderParts(part.parts)}
           </Motor>
         ) : (
           <Part
@@ -346,7 +305,7 @@ export const GRobot7 = ({ position }) => {
             {...part}
             ref={PartRef.current[part.uid]}
           >
-            {part.parts && part.parts.length > 0 && renderParts(part.parts)}{" "}
+            {part.parts && part.parts.length > 0 && renderParts(part.parts)}
           </Part>
         )}
       </>
@@ -389,24 +348,10 @@ export const GRobot7 = ({ position }) => {
     return () => clearTimeout(fixedTimeout);
   }, []);
 
-  const boxRef = useRef(null);
-
-  const handleMouseMove = (event) => {
-    if (boxRef.current) {
-      // Convert mouse position to world coordinates
-      const mouseX = (event.clientX / window.innerWidth) * 10; // Normalized device coordinates
-      const mouseY = -(event.clientY / window.innerHeight) * 10;
-
-      // Create a vector for the new position
-      const newPosition = new THREE.Vector3(mouseX, mouseY, 0); // Z is set to 0 for 2D movement
-      boxRef.current.setTranslation(newPosition); // Update the box's position in Rapier
-    }
-  };
-
   return (
     <>
-      <RigidBody ref={boxRef} type="kinematicPosition" mass={10000000}>
-        <Box args={[1, 1, 1]} position={[8, 1, 0]}>
+      <RigidBody type="dynamic">
+        <Box args={[1, 1, 1]} position={[0, 1, 2]}>
           <meshStandardMaterial color="orange" />
         </Box>
       </RigidBody>

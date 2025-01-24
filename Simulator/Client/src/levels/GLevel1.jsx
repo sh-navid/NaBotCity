@@ -9,22 +9,27 @@ import { GRobot6 } from "../objects/GRobot6";
 import { GRobot } from "../objects/GRobot";
 import { HRobot } from "../objects/HRobot";
 import { Part } from "../objects/Part";
+import { ARobotNew } from "../objects/ARobotNew";
+import { ARobotNew2 } from "../objects/ARobotNew2";
 
 const GLevel1 = () => {
   return (
     <RobotCanvas camPosition={[15, 15, 15]}>
-      <GRobot position={[10, 0.5, 0]} />
+      {/* <GRobot position={[10, 0.5, 0]} />
       <GRobot2 position={[-10, 0.5, 0]} />
       <GRobot3 position={[0, 0.5, 10]} />
-      <GRobot4 position={[-1, 1, -10]} />
+      <GRobot4 position={[-1, 1, -10]} /> */}
       {/* <GRobot5 position={[10, 1.1, -10]} /> */}
 
-      <GRobot6 position={[0, 1.1, 0]} />
+      {/* <GRobot6 position={[10, 1.1, 10]} /> */}
+
+      <ARobotNew position={[10, 0,10]}/>
+      <ARobotNew2 position={[0, 0,0]}/>
 
       {/* <ARobotL1 initPosition={[10, 0, 10]} /> */}
       <HRobot initPosition={[-10, 0, 10]} />
 
-      <RigidBody type={"fixed"}>
+      <RigidBody type={"fixed"} >
         <Part name="Floor3" />
       </RigidBody>
 
