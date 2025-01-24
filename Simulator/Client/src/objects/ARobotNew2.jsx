@@ -1,8 +1,8 @@
 import * as THREE from "three";
 import { Box } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
-import { quat, RigidBody } from "@react-three/rapier";
-import { useRef, useEffect, createRef, useState } from "react";
+import { CuboidCollider, quat, RigidBody } from "@react-three/rapier";
+import { useRef, useEffect, createRef, useState, useMemo } from "react";
 import { FixedJoint, Motor, Part, RevoluteJoint } from "./Part";
 
 export const ARobotNew2 = ({ position }) => {
@@ -152,6 +152,42 @@ export const ARobotNew2 = ({ position }) => {
         console.error("Error updating positions and rotations:", error);
       }
     });
+
+    if (PhysicsRef && PhysicsRef.current) {
+      Object.keys(PhysicsRef.current).forEach((name) => {
+        try {
+          const part1 = PartRef.current[name]?.current;
+          const part2 = PhysicsRef.current[name]?.current;
+
+          if (!part1 || !part2) {
+            return;
+          }
+
+          const worldPosition = new THREE.Vector3();
+          part1.getWorldPosition(worldPosition);
+
+          part2.wakeUp();
+          part2.setTranslation(
+            { x: worldPosition.x, y: worldPosition.y, z: worldPosition.z },
+            true
+          );
+
+          const worldQuaternion = new THREE.Quaternion();
+          part1.getWorldQuaternion(worldQuaternion);
+
+          if (part2.setRotation) {
+            part2.setRotation({
+              x: worldQuaternion.x,
+              y: worldQuaternion.y,
+              z: worldQuaternion.z,
+              w: worldQuaternion.w,
+            });
+          }
+        } catch (error) {
+          console.error("Error updating positions and rotations:", error);
+        }
+      });
+    }
   });
 
   const COUNT = 8;
@@ -162,7 +198,7 @@ export const ARobotNew2 = ({ position }) => {
   const [xAngle, setXAngle] = useState(Array(COUNT).fill(0));
 
   useEffect(() => {
-    const SPEED = 0.01;
+    const SPEED = 0.03;
     const updateAngles = (angles) => angles.map((angle) => angle + SPEED);
 
     const intervalId = setInterval(() => {
@@ -178,7 +214,7 @@ export const ARobotNew2 = ({ position }) => {
       {
         model: "Motor1",
         position: [0, y, 0],
-        physics: { type: "kinematicPosition", colliders:false },
+        physics: { type: "kinematicPosition" },
         uid: "M" + index,
         parts: [
           {
@@ -200,7 +236,7 @@ export const ARobotNew2 = ({ position }) => {
                     position: [0, 0, 0],
                     rotation: [0, 0, xAngle[index]],
                     scale: [D_SCALE, D_SCALE, D_SCALE],
-                    physics: null,
+                    physics: {},
                     uid: "XS" + index,
                     parts: parts,
                   },
@@ -314,28 +350,43 @@ export const ARobotNew2 = ({ position }) => {
 
   const renderParts = (parts) => {
     return parts.map((part) => {
-      if (!PhysicsRef.current[part.uid]) {
-        PhysicsRef.current[part.uid] = createRef();
-      }
       if (!PartRef.current[part.uid]) {
         PartRef.current[part.uid] = createRef();
       }
 
-      if (part.physics) {
-        return (
-          <RigidBody
-            key={"rigidbody-" + part.uid}
-            restitution={0} // Default Bounciness
-            colliders={false} // Default value
-            {...part.physics}
-            ref={PhysicsRef.current[part.uid]}
-          >
-            <PartSelector part={part} />
-          </RigidBody>
-        );
-      } else {
-        return <PartSelector part={part} />;
+      return (
+        <>
+          <PartSelector part={part} />
+        </>
+      );
+    });
+  };
+
+  const renderPhysics = (parts) => {
+    return parts.map((part) => {
+      if (!PhysicsRef.current[part.uid]) {
+        PhysicsRef.current[part.uid] = createRef();
       }
+
+      return (
+        <>
+          {part.physics && (
+            <RigidBody
+              {...part.physics}
+              position={part.position ?? [0, 0, 0]}
+              rotation={part.rotation ?? [0, 0, 0]}
+              scale={part.scale ?? [1, 1, 1]}
+              colliders={false}
+              key={"rb-" + part.uid}
+              type="kinematicPosition"
+              ref={PhysicsRef.current[part.uid]}
+            >
+              <CuboidCollider args={[0.25, 0.25, 0.25]} />
+            </RigidBody>
+          )}
+          {part.parts && part.parts.length > 0 && renderPhysics(part.parts)}
+        </>
+      );
     });
   };
 
@@ -348,6 +399,8 @@ export const ARobotNew2 = ({ position }) => {
     return () => clearTimeout(fixedTimeout);
   }, []);
 
+  const physicsElements = useMemo(() => renderPhysics(Parts), []);
+
   return (
     <>
       <RigidBody type="dynamic">
@@ -356,7 +409,10 @@ export const ARobotNew2 = ({ position }) => {
         </Box>
       </RigidBody>
 
-      <group position={position}>{renderParts(Parts)}</group>
+      <group position={position}>
+        {renderParts(Parts)}
+        {physicsElements}
+      </group>
 
       {renderFixedJoints &&
         RevoluteJoints.map((j) => (

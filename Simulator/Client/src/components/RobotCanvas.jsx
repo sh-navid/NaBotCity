@@ -19,7 +19,7 @@ const RobotCanvas = ({ children, camPosition =[-12, 12, 12]}) => {
       camera={{ position: camPosition, fov: 45 }}
       shadows
     >
-      <Physics debug={true} gravity={[0, -9.81, 0]}>
+      <Physics debug={true} gravity={[0, -9.81, 0]} updateLoop="independent">
         <ambientLight intensity={1} />
         <pointLight position={[10, 10, 10]} intensity={100} />
         <OrbitControls autoRotate={true} enableZoom={true} enablePan={true} />
