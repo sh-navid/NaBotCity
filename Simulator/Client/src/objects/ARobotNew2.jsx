@@ -1,9 +1,10 @@
 import * as THREE from "three";
+import { Json } from "../utils/Json";
 import { Box } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
-import { CuboidCollider, quat, RigidBody } from "@react-three/rapier";
-import { useRef, useEffect, createRef, useState, useMemo } from "react";
 import { FixedJoint, Motor, Part, RevoluteJoint } from "./Part";
+import { quat, RigidBody, CuboidCollider } from "@react-three/rapier";
+import { useRef, useEffect, createRef, useState, useMemo } from "react";
 
 export const ARobotNew2 = ({ position }) => {
   const bodyRef = useRef();
@@ -49,45 +50,25 @@ export const ARobotNew2 = ({ position }) => {
         applyImpulse(-2);
       }
 
-      if (event.key === "a" || event.key === "d") {
-        const rbRef = PhysicsRef.current["M_Shaft1"];
-        if (rbRef.current) {
-          const currentRotationRapier = rbRef.current.rotation();
-          const currentRotation = quat(currentRotationRapier);
+      // if (event.key === "a" || event.key === "d") {
+      //   const rbRef = PhysicsRef.current["M_Shaft1"];
+      //   if (rbRef.current) {
+      //     const currentRotationRapier = rbRef.current.rotation();
+      //     const currentRotation = quat(currentRotationRapier);
 
-          const leftRotation = new THREE.Quaternion();
-          const angleInRadians = THREE.MathUtils.degToRad(
-            event.key === "d" ? 10 : -10
-          );
-          leftRotation.setFromAxisAngle(
-            new THREE.Vector3(1, 0, 0),
-            -angleInRadians
-          );
+      //     const leftRotation = new THREE.Quaternion();
+      //     const angleInRadians = THREE.MathUtils.degToRad(
+      //       event.key === "d" ? 10 : -10
+      //     );
+      //     leftRotation.setFromAxisAngle(
+      //       new THREE.Vector3(1, 0, 0),
+      //       -angleInRadians
+      //     );
 
-          const newRotation = currentRotation.multiply(leftRotation);
-          rbRef.current.setNextKinematicRotation(newRotation);
-        }
-      }
-
-      if (event.key === "w" || event.key === "s") {
-        const rbRef = PhysicsRef.current["M_Shaft2"];
-        if (rbRef.current) {
-          const currentRotationRapier = rbRef.current.rotation();
-          const currentRotation = quat(currentRotationRapier);
-
-          const leftRotation = new THREE.Quaternion();
-          const angleInRadians = THREE.MathUtils.degToRad(
-            event.key === "w" ? 10 : -10
-          );
-          leftRotation.setFromAxisAngle(
-            new THREE.Vector3(1, 0, 0),
-            -angleInRadians
-          );
-
-          const newRotation = currentRotation.multiply(leftRotation);
-          rbRef.current.setNextKinematicRotation(newRotation);
-        }
-      }
+      //     const newRotation = currentRotation.multiply(leftRotation);
+      //     rbRef.current.setNextKinematicRotation(newRotation);
+      //   }
+      // }
 
       // if (event.key === "m") {
       //   if (boxRef.current) {
@@ -193,20 +174,50 @@ export const ARobotNew2 = ({ position }) => {
   const COUNT = 8;
   const M_POS = 1.12;
   const D_SCALE = 0.9;
+  const SPEED = 0.01;
 
   const [mAngle, setMAngle] = useState(Array(COUNT).fill(0));
   const [xAngle, setXAngle] = useState(Array(COUNT).fill(0));
 
-  useEffect(() => {
-    const SPEED = 0.03;
-    const updateAngles = (angles) => angles.map((angle) => angle + SPEED);
+  const [mTo, setMTo] = useState(Array(COUNT).fill(0));
+  const [xTo, setXTo] = useState(Array(COUNT).fill(0));
 
-    const intervalId = setInterval(() => {
-      setMAngle((prevMAngle) => updateAngles(prevMAngle));
-      setXAngle((prevXAngle) => updateAngles(prevXAngle));
+  const getRnd = () => {
+    return (Math.random() * 2 - 1) * Math.PI;
+  };
+
+  const updateAngles = (currentAngles, targetAngles) => {
+    return currentAngles.map((angle, i) => {
+      if (angle + SPEED < targetAngles[i]) {
+        return angle + SPEED;
+      } else if (angle - SPEED > targetAngles[i]) {
+        return angle - SPEED;
+      } else {
+        return targetAngles[i];
+      }
+    });
+  };
+
+  useEffect(() => {
+    const interval1 = setInterval(async () => {
+      setMAngle((prevMAngle) => updateAngles(Json.clone(prevMAngle), mTo));
+      setXAngle((prevXAngle) => updateAngles(Json.clone(prevXAngle), xTo));
     }, 30);
 
-    return () => clearInterval(intervalId);
+    for (let i = 0; i < COUNT; i++) {
+      if (mAngle[i] === mTo[i]) {
+        mTo[i] = getRnd();
+        setMTo(mTo);
+      }
+      if (xAngle[i] === xTo[i]) {
+        xTo[i] = getRnd();
+        setMTo(xTo);
+      }
+    }
+
+    return () => {
+      clearInterval(interval1);
+    };
   }, []);
 
   const M = (index, parts = [], y = 0) => {
@@ -222,13 +233,13 @@ export const ARobotNew2 = ({ position }) => {
             position: [0, -0.2, 0],
             rotation: [0, mAngle[index], 0],
             scale: [D_SCALE, D_SCALE, D_SCALE],
-            physics: null,
+            physics: { type: "kinematicPosition" },
             uid: "S" + index,
             parts: [
               {
                 model: "Motor2",
                 position: [0, M_POS, 0],
-                physics: null,
+                physics: { type: "kinematicPosition" },
                 uid: "XM" + index,
                 parts: [
                   {
@@ -236,7 +247,7 @@ export const ARobotNew2 = ({ position }) => {
                     position: [0, 0, 0],
                     rotation: [0, 0, xAngle[index]],
                     scale: [D_SCALE, D_SCALE, D_SCALE],
-                    physics: {},
+                    physics: { type: "kinematicPosition" },
                     uid: "XS" + index,
                     parts: parts,
                   },
@@ -381,7 +392,7 @@ export const ARobotNew2 = ({ position }) => {
               type="kinematicPosition"
               ref={PhysicsRef.current[part.uid]}
             >
-              <CuboidCollider args={[0.25, 0.25, 0.25]} />
+              <CuboidCollider args={[0.15, 0.15, 0.15]} />
             </RigidBody>
           )}
           {part.parts && part.parts.length > 0 && renderPhysics(part.parts)}
@@ -404,7 +415,25 @@ export const ARobotNew2 = ({ position }) => {
   return (
     <>
       <RigidBody type="dynamic">
-        <Box args={[1, 1, 1]} position={[0, 1, 2]}>
+        <Box args={[1, 1, 1]} position={[1, 1, 1]}>
+          <meshStandardMaterial color="orange" />
+        </Box>
+      </RigidBody>
+
+      <RigidBody type="dynamic">
+        <Box args={[1, 1, 1]} position={[-1, 1, 1]}>
+          <meshStandardMaterial color="orange" />
+        </Box>
+      </RigidBody>
+
+      <RigidBody type="dynamic">
+        <Box args={[1, 1, 1]} position={[1, 1, -1]}>
+          <meshStandardMaterial color="orange" />
+        </Box>
+      </RigidBody>
+
+      <RigidBody type="dynamic">
+        <Box args={[1, 1, 1]} position={[-1, 1, -1]}>
           <meshStandardMaterial color="orange" />
         </Box>
       </RigidBody>
