@@ -1,6 +1,6 @@
 import { useRef, useEffect, createRef, useState } from "react";
 import { useFrame } from "@react-three/fiber";
-import { Motor, Part } from "./Part";
+import { Part } from "./Part";
 import { Json } from "../utils/Json";
 import * as THREE from "three";
 
@@ -18,27 +18,6 @@ export const ARobotNew2 = ({ position }) => {
     }
   }, [position]);
 
-  const applyImpulse = (force) => {
-    // Removed physics application
-  };
-
-  useEffect(() => {
-    const handleKeyDown = (event) => {
-      // Removed physics wakeUp calls
-      if (event.key === "ArrowUp") {
-        applyImpulse(2);
-      }
-      if (event.key === "ArrowDown") {
-        applyImpulse(-2);
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-    };
-  }, []);
 
   useFrame(() => {
     // Removed physics updates in useFrame
@@ -59,7 +38,6 @@ export const ARobotNew2 = ({ position }) => {
         const worldQuaternion = new THREE.Quaternion();
         part1.getWorldQuaternion(worldQuaternion);
         part2.quaternion.copy(worldQuaternion); // Direct quaternion update
-
       } catch (error) {
         console.error("Error updating positions and rotations:", error);
       }
@@ -68,7 +46,6 @@ export const ARobotNew2 = ({ position }) => {
 
   const COUNT = 8;
   const M_POS = 1.12;
-  const D_SCALE = 0.9;
   const SPEED = 0.01;
 
   const [mAngle, setMAngle] = useState(Array(COUNT).fill(0));
@@ -125,8 +102,8 @@ export const ARobotNew2 = ({ position }) => {
           {
             model: "Shaft1",
             position: [0, -0.2, 0],
-            rotation: [0, mAngle[index], 0],
-            scale: [D_SCALE, D_SCALE, D_SCALE],
+            rotation: [0, 0 /* Change */, 0],
+            scale: [0.9, 0.9, 0.9],
             uid: "S" + index,
             parts: [
               {
@@ -137,8 +114,8 @@ export const ARobotNew2 = ({ position }) => {
                   {
                     model: "Shaft2",
                     position: [0, 0, 0],
-                    rotation: [0, 0, xAngle[index]],
-                    scale: [D_SCALE, D_SCALE, D_SCALE],
+                    rotation: [0, 0, 0 /* Change */],
+                    scale: [0.9, 0.9, 0.9],
                     uid: "XS" + index,
                     parts: parts,
                   },
@@ -168,8 +145,6 @@ export const ARobotNew2 = ({ position }) => {
     },
   ];
 
-  const RevoluteJoints = [];
-  const FixedJoints = [];
   const FollowJoint = [];
 
   const PartSelector = ({ part }) => {
@@ -187,25 +162,14 @@ export const ARobotNew2 = ({ position }) => {
 
     return (
       <>
-        {part.model === "Motor" ? (
-          <Motor
-            key={"part-" + part.uid}
-            name={part.model}
-            {...part}
-            ref={PartRef.current[part.uid]}
-          >
-            {part.parts && part.parts.length > 0 && renderParts(part.parts)}
-          </Motor>
-        ) : (
-          <Part
-            key={"part-" + part.uid}
-            name={part.model}
-            {...part}
-            ref={PartRef.current[part.uid]}
-          >
-            {part.parts && part.parts.length > 0 && renderParts(part.parts)}
-          </Part>
-        )}
+        <Part
+          key={"part-" + part.uid}
+          name={part.model}
+          {...part}
+          ref={PartRef.current[part.uid]}
+        >
+          {part.parts && part.parts.length > 0 && renderParts(part.parts)}
+        </Part>
       </>
     );
   };
@@ -224,22 +188,9 @@ export const ARobotNew2 = ({ position }) => {
     });
   };
 
-
-  const [renderFixedJoints, setRenderFixedJoints] = useState(false);
-
-  useEffect(() => {
-    const fixedTimeout = setTimeout(() => {
-      setRenderFixedJoints(true);
-    }, 100);
-    return () => clearTimeout(fixedTimeout);
-  }, []);
-
-
   return (
     <>
-      <group position={position}>
-        {renderParts(Parts)}
-      </group>
+      <group position={position}>{renderParts(Parts)}</group>
     </>
   );
 };
