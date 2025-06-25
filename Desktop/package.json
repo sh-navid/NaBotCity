@@ -1,0 +1,25 @@
+{
+  "name": "NaBotCity",
+  "version": "1.0.0",
+  "description": "Desktop version for nabot assistant",
+  "main": "src/main.js",
+  "scripts": {
+    "build": "electron-builder",
+    "start": "electron ."
+  },
+  "build": {
+    "appId": "com.nabot.city.desktop",
+    "mac": {
+      "target": "dmg"
+    },
+    "win": {
+      "target": "nsis"
+    },
+    "linux": {
+      "target": "AppImage"
+    }
+  },
+  "dependencies": {
+    "electron": "^latest version"
+  }
+}
