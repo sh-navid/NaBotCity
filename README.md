@@ -1,58 +1,14 @@
-# NaBotCity
-RoboCity, is a hobby project focused on simulating robotic systems. This project is in the early stages. However, as future works, it should be possible to add more robots or make them custom. Various sensors and modules can be used in simulation. The possibility of writing and installing different software on each robot can be included. Add different steps to the simulator, to learn how to use each dynamic module in their own system, how to perform tasks collectively, how to know the environment and share information among themselves. A person should be able to plan them accurately. Like "go to point one and then rotate exactly 10 degrees" or do this with higher level commands like "pick up the red boxes and then place them on the table in order of size". 
+# NaBotCity: A Robotic Simulation Project
 
-## Robots of NaBotCity
-HRobot V2 (Not simulated yet)
-![](/Documents/Screenshots/HRobotV2.png)
-ARobot
-![](/Documents/Screenshots/ARobot.png)
+NaBotCity is a hobby project simulating robots. It's currently in early development, but the goal is to allow users to create and customize robots, integrate various sensors and modules, and program their behavior. **Future iterations** will allow for more complex interactions, including:
 
-## NaBotCity Simulator V0.4
-Now we are able to make our customized robots
-![](/Documents/Screenshots/V4.png)
-![](/Documents/Screenshots/V4_RoboCity.png)
+* **Custom Robot Creation:** Define robots using a simple JSON format. Easily tweak existing robots or create entirely new ones using LLMs or manual JSON editing.
+* **Modular Design:**  Add various sensors (e.g., lidar, cameras) and actuators (e.g., wheels, arms) to your robots.
+* **Software Installation:**  Simulate installing different software packages or configurations onto individual robots.
+* **Collaborative Tasks:**  Design and execute complex, collaborative tasks involving multiple robots.  Examples include coordinated movement, object manipulation, and information sharing.
+* **Precise Control:** Issue both low-level commands (e.g., "move to (x,y) and rotate 10 degrees") and high-level commands (e.g., "pick up the red boxes and place them on the table in order of size").
+* **Environmental Awareness:** Simulate a realistic environment where robots can perceive and interact with their surroundings.
 
-## NaBotCity Simulator V0.3
-![](/Documents/Screenshots/V3_PointCloud.png)
-
-
-## TODO
-- [x] Try to design first sketch of NaBotCity
-- [ ] Reimport all GRobots with new JSON structure and RobotGenerator module 
-- [ ] Reimport ARobot and HRobot with new JSON structure and RobotGenerator module
-- [ ] Make scenes available with socket io on all tabs
-
-## NaBotCity Modules
-- [ ] Simulator
-- [ ] Assistant
-- [ ] OS
-- [ ] RDK (Robot Dev Kit)
-- [ ] Robot Designer
-- [ ] Robot App Store
-- [ ] MMO World
-
-## NaBotCity Sensors
-A list of sensors needs to be implemented
-- General
-    - [ ] Accelerometer
-    - [ ] Camera
-    - [ ] ForceTorque
-    - [ ] Pressure
-    - [ ] Sound
-- Light
-    - [ ] Photoresistor
-    - [ ] Photovoltaic
-- Navigation
-    - [ ] GPS
-    - [ ] Gyroscope
-    - [ ] IMU
-    - [ ] LiDAR
-- Proximity
-    - [ ] Contact
-    - [ ] Infrared
-    - [ ] Ultrasonic
-- Thermal
-    - [ ] Temperature
 
 
 ## Instruction
