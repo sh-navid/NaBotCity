@@ -1,10 +1,8 @@
-/* */
-import * as THREE from "three";
-import { Json } from "../utils/Json";
-import { Box } from "@react-three/drei";
+import { useRef, useEffect, createRef, useState } from "react";
 import { useFrame } from "@react-three/fiber";
-import { FixedJoint, Motor, Part, RevoluteJoint } from "./Part";
-import { useRef, useEffect, createRef, useState, useMemo } from "react";
+import { Motor, Part } from "./Part";
+import { Json } from "../utils/Json";
+import * as THREE from "three";
 
 export const ARobotNew2 = ({ position }) => {
   const bodyRef = useRef();
