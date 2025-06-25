@@ -1,15 +1,14 @@
+/* */
 import * as THREE from "three";
 import { Json } from "../utils/Json";
 import { Box } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import { FixedJoint, Motor, Part, RevoluteJoint } from "./Part";
-import { quat, RigidBody, CuboidCollider } from "@react-three/rapier";
 import { useRef, useEffect, createRef, useState, useMemo } from "react";
 
 export const ARobotNew2 = ({ position }) => {
   const bodyRef = useRef();
   const PartRef = useRef({});
-  const PhysicsRef = useRef({});
 
   useEffect(() => {
     if (bodyRef.current) {
@@ -22,74 +21,18 @@ export const ARobotNew2 = ({ position }) => {
   }, [position]);
 
   const applyImpulse = (force) => {
-    if (PhysicsRef.current) {
-      let i = [0, 0, 1];
-
-      PhysicsRef.current["FrontLeftWheel"].current.applyTorqueImpulse({
-        x: i[0] * force,
-        y: i[1] * force,
-        z: i[2] * force,
-      });
-
-      PhysicsRef.current["FrontRightWheel"].current.applyTorqueImpulse({
-        x: i[0] * force,
-        y: i[1] * force,
-        z: i[2] * force,
-      });
-    }
+    // Removed physics application
   };
 
   useEffect(() => {
     const handleKeyDown = (event) => {
-      PhysicsRef.current["FrontLeftWheel"].current?.wakeUp();
-      PhysicsRef.current["FrontRightWheel"].current?.wakeUp();
+      // Removed physics wakeUp calls
       if (event.key === "ArrowUp") {
         applyImpulse(2);
       }
       if (event.key === "ArrowDown") {
         applyImpulse(-2);
       }
-
-      // if (event.key === "a" || event.key === "d") {
-      //   const rbRef = PhysicsRef.current["M_Shaft1"];
-      //   if (rbRef.current) {
-      //     const currentRotationRapier = rbRef.current.rotation();
-      //     const currentRotation = quat(currentRotationRapier);
-
-      //     const leftRotation = new THREE.Quaternion();
-      //     const angleInRadians = THREE.MathUtils.degToRad(
-      //       event.key === "d" ? 10 : -10
-      //     );
-      //     leftRotation.setFromAxisAngle(
-      //       new THREE.Vector3(1, 0, 0),
-      //       -angleInRadians
-      //     );
-
-      //     const newRotation = currentRotation.multiply(leftRotation);
-      //     rbRef.current.setNextKinematicRotation(newRotation);
-      //   }
-      // }
-
-      // if (event.key === "m") {
-      //   if (boxRef.current) {
-      //     const currentPosition = boxRef.current.translation();
-
-      //     const forwardVector = new THREE.Vector3(-0.1, 0, 0);
-      //     const rotation = boxRef.current.rotation();
-
-      //     forwardVector.applyEuler(
-      //       new THREE.Euler(rotation.x, rotation.y, rotation.z)
-      //     );
-
-      //     const newPosition = {
-      //       x: currentPosition.x + forwardVector.x,
-      //       y: currentPosition.y + forwardVector.y,
-      //       z: currentPosition.z + forwardVector.z,
-      //     };
-
-      //     boxRef.current.setNextKinematicTranslation(newPosition);
-      //   }
-      // }
     };
 
     window.addEventListener("keydown", handleKeyDown);
@@ -100,10 +43,11 @@ export const ARobotNew2 = ({ position }) => {
   }, []);
 
   useFrame(() => {
+    // Removed physics updates in useFrame
     FollowJoint.forEach((joint) => {
       try {
         const part1 = PartRef.current[joint.part1]?.current;
-        const part2 = PhysicsRef.current[joint.part2]?.current;
+        const part2 = PartRef.current[joint.part2]?.current; // Changed to PartRef
 
         if (!part1 || !part2) {
           return;
@@ -112,63 +56,16 @@ export const ARobotNew2 = ({ position }) => {
         const worldPosition = new THREE.Vector3();
         part1.getWorldPosition(worldPosition);
 
-        part2.wakeUp();
-        part2.setTranslation(
-          { x: worldPosition.x, y: worldPosition.y, z: worldPosition.z },
-          true
-        );
+        part2.position.copy(worldPosition); // Direct position update
 
         const worldQuaternion = new THREE.Quaternion();
         part1.getWorldQuaternion(worldQuaternion);
+        part2.quaternion.copy(worldQuaternion); // Direct quaternion update
 
-        if (part2.setRotation) {
-          part2.setRotation({
-            x: worldQuaternion.x,
-            y: worldQuaternion.y,
-            z: worldQuaternion.z,
-            w: worldQuaternion.w,
-          });
-        }
       } catch (error) {
         console.error("Error updating positions and rotations:", error);
       }
     });
-
-    if (PhysicsRef && PhysicsRef.current) {
-      Object.keys(PhysicsRef.current).forEach((name) => {
-        try {
-          const part1 = PartRef.current[name]?.current;
-          const part2 = PhysicsRef.current[name]?.current;
-
-          if (!part1 || !part2) {
-            return;
-          }
-
-          const worldPosition = new THREE.Vector3();
-          part1.getWorldPosition(worldPosition);
-
-          part2.wakeUp();
-          part2.setTranslation(
-            { x: worldPosition.x, y: worldPosition.y, z: worldPosition.z },
-            true
-          );
-
-          const worldQuaternion = new THREE.Quaternion();
-          part1.getWorldQuaternion(worldQuaternion);
-
-          if (part2.setRotation) {
-            part2.setRotation({
-              x: worldQuaternion.x,
-              y: worldQuaternion.y,
-              z: worldQuaternion.z,
-              w: worldQuaternion.w,
-            });
-          }
-        } catch (error) {
-          console.error("Error updating positions and rotations:", error);
-        }
-      });
-    }
   });
 
   const COUNT = 8;
@@ -225,7 +122,6 @@ export const ARobotNew2 = ({ position }) => {
       {
         model: "Motor1",
         position: [0, y, 0],
-        physics: { type: "kinematicPosition" },
         uid: "M" + index,
         parts: [
           {
@@ -233,13 +129,11 @@ export const ARobotNew2 = ({ position }) => {
             position: [0, -0.2, 0],
             rotation: [0, mAngle[index], 0],
             scale: [D_SCALE, D_SCALE, D_SCALE],
-            physics: { type: "kinematicPosition" },
             uid: "S" + index,
             parts: [
               {
                 model: "Motor2",
                 position: [0, M_POS, 0],
-                physics: { type: "kinematicPosition" },
                 uid: "XM" + index,
                 parts: [
                   {
@@ -247,7 +141,6 @@ export const ARobotNew2 = ({ position }) => {
                     position: [0, 0, 0],
                     rotation: [0, 0, xAngle[index]],
                     scale: [D_SCALE, D_SCALE, D_SCALE],
-                    physics: { type: "kinematicPosition" },
                     uid: "XS" + index,
                     parts: parts,
                   },
@@ -272,54 +165,14 @@ export const ARobotNew2 = ({ position }) => {
     {
       model: "Body3",
       position: [0, 0.5, 0],
-      physics: null,
       uid: "Base",
       parts: MCount(COUNT),
     },
   ];
 
-  const RevoluteJoints = [
-    // {
-    //   part1: "FrontBody",
-    //   anchor1: [0, 0, 0],
-    //   part2: "FrontRightWheel",
-    //   anchor2: [0, 0, 0],
-    // },
-    // {
-    //   part1: "FrontBody",
-    //   anchor1: [0, 0, 0],
-    //   part2: "FrontLeftWheel",
-    //   anchor2: [0, 0, 0],
-    // },
-    // {
-    //   part1: "RearBody",
-    //   anchor1: [0, 0, 0],
-    //   part2: "RearRightWheel",
-    //   anchor2: [0, 0, 0],
-    // },
-    // {
-    //   part1: "RearBody",
-    //   anchor1: [0, 0, 0],
-    //   part2: "RearLeftWheel",
-    //   anchor2: [0, 0, 0],
-    // },
-  ];
-
-  const FixedJoints = [
-    // {
-    //   part1: "RearBody",
-    //   anchor1: [-front, 0, 0],
-    //   part2: "FrontBody",
-    //   anchor2: [front, 0, 0],
-    // },
-  ];
-
-  const FollowJoint = [
-    // {
-    //   part1: "FrontBody",
-    //   part2: "M_Base1",
-    // },
-  ];
+  const RevoluteJoints = [];
+  const FixedJoints = [];
+  const FollowJoint = [];
 
   const PartSelector = ({ part }) => {
     if (part.model === "Group")
@@ -373,33 +226,6 @@ export const ARobotNew2 = ({ position }) => {
     });
   };
 
-  const renderPhysics = (parts) => {
-    return parts.map((part) => {
-      if (!PhysicsRef.current[part.uid]) {
-        PhysicsRef.current[part.uid] = createRef();
-      }
-
-      return (
-        <>
-          {part.physics && (
-            <RigidBody
-              {...part.physics}
-              position={part.position ?? [0, 0, 0]}
-              rotation={part.rotation ?? [0, 0, 0]}
-              scale={part.scale ?? [1, 1, 1]}
-              colliders={false}
-              key={"rb-" + part.uid}
-              type="kinematicPosition"
-              ref={PhysicsRef.current[part.uid]}
-            >
-              <CuboidCollider args={[0.15, 0.15, 0.15]} />
-            </RigidBody>
-          )}
-          {part.parts && part.parts.length > 0 && renderPhysics(part.parts)}
-        </>
-      );
-    });
-  };
 
   const [renderFixedJoints, setRenderFixedJoints] = useState(false);
 
@@ -410,59 +236,12 @@ export const ARobotNew2 = ({ position }) => {
     return () => clearTimeout(fixedTimeout);
   }, []);
 
-  const physicsElements = useMemo(() => renderPhysics(Parts), []);
 
   return (
     <>
-      <RigidBody type="dynamic">
-        <Box args={[1, 1, 1]} position={[1, 1, 1]}>
-          <meshStandardMaterial color="orange" />
-        </Box>
-      </RigidBody>
-
-      <RigidBody type="dynamic">
-        <Box args={[1, 1, 1]} position={[-1, 1, 1]}>
-          <meshStandardMaterial color="orange" />
-        </Box>
-      </RigidBody>
-
-      <RigidBody type="dynamic">
-        <Box args={[1, 1, 1]} position={[1, 1, -1]}>
-          <meshStandardMaterial color="orange" />
-        </Box>
-      </RigidBody>
-
-      <RigidBody type="dynamic">
-        <Box args={[1, 1, 1]} position={[-1, 1, -1]}>
-          <meshStandardMaterial color="orange" />
-        </Box>
-      </RigidBody>
-
       <group position={position}>
         {renderParts(Parts)}
-        {physicsElements}
       </group>
-
-      {renderFixedJoints &&
-        RevoluteJoints.map((j) => (
-          <RevoluteJoint
-            part1={PhysicsRef.current[j.part1]}
-            part2={PhysicsRef.current[j.part2]}
-            part1Anchor={j.anchor1 ?? [0, 0, 0]}
-            part2Anchor={j.anchor2 ?? [0, 0, 0]}
-            rotationAxis={j.axis ?? [0, 0, 1]}
-          />
-        ))}
-
-      {renderFixedJoints &&
-        FixedJoints.map((j) => (
-          <FixedJoint
-            part1={PhysicsRef.current[j.part1]}
-            part2={PhysicsRef.current[j.part2]}
-            part1Anchor={j.anchor1 ?? [0, 0, 0]}
-            part2Anchor={j.anchor2 ?? [0, 0, 0]}
-          />
-        ))}
     </>
   );
 };
