@@ -1,8 +1,5 @@
-import { useRef, useEffect, createRef, useState } from "react";
-import { useFrame } from "@react-three/fiber";
+import { useRef, useEffect, createRef } from "react";
 import { Part } from "./Part";
-import { Json } from "../utils/Json";
-import * as THREE from "three";
 
 export const ARobotNew2 = ({ position }) => {
   const bodyRef = useRef();
@@ -18,80 +15,6 @@ export const ARobotNew2 = ({ position }) => {
     }
   }, [position]);
 
-
-  useFrame(() => {
-    // Removed physics updates in useFrame
-    FollowJoint.forEach((joint) => {
-      try {
-        const part1 = PartRef.current[joint.part1]?.current;
-        const part2 = PartRef.current[joint.part2]?.current; // Changed to PartRef
-
-        if (!part1 || !part2) {
-          return;
-        }
-
-        const worldPosition = new THREE.Vector3();
-        part1.getWorldPosition(worldPosition);
-
-        part2.position.copy(worldPosition); // Direct position update
-
-        const worldQuaternion = new THREE.Quaternion();
-        part1.getWorldQuaternion(worldQuaternion);
-        part2.quaternion.copy(worldQuaternion); // Direct quaternion update
-      } catch (error) {
-        console.error("Error updating positions and rotations:", error);
-      }
-    });
-  });
-
-  const COUNT = 8;
-  const M_POS = 1.12;
-  const SPEED = 0.01;
-
-  const [mAngle, setMAngle] = useState(Array(COUNT).fill(0));
-  const [xAngle, setXAngle] = useState(Array(COUNT).fill(0));
-
-  const [mTo, setMTo] = useState(Array(COUNT).fill(0));
-  const [xTo, setXTo] = useState(Array(COUNT).fill(0));
-
-  const getRnd = () => {
-    return (Math.random() * 2 - 1) * Math.PI;
-  };
-
-  const updateAngles = (currentAngles, targetAngles) => {
-    return currentAngles.map((angle, i) => {
-      if (angle + SPEED < targetAngles[i]) {
-        return angle + SPEED;
-      } else if (angle - SPEED > targetAngles[i]) {
-        return angle - SPEED;
-      } else {
-        return targetAngles[i];
-      }
-    });
-  };
-
-  useEffect(() => {
-    const interval1 = setInterval(async () => {
-      setMAngle((prevMAngle) => updateAngles(Json.clone(prevMAngle), mTo));
-      setXAngle((prevXAngle) => updateAngles(Json.clone(prevXAngle), xTo));
-    }, 30);
-
-    for (let i = 0; i < COUNT; i++) {
-      if (mAngle[i] === mTo[i]) {
-        mTo[i] = getRnd();
-        setMTo(mTo);
-      }
-      if (xAngle[i] === xTo[i]) {
-        xTo[i] = getRnd();
-        setMTo(xTo);
-      }
-    }
-
-    return () => {
-      clearInterval(interval1);
-    };
-  }, []);
-
   const M = (index, parts = [], y = 0) => {
     return [
       {
@@ -102,19 +25,19 @@ export const ARobotNew2 = ({ position }) => {
           {
             model: "Shaft1",
             position: [0, -0.2, 0],
-            rotation: [0, 0 /* Change */, 0],
+            rotation: [0, .2 /* Change */, 0],
             scale: [0.9, 0.9, 0.9],
             uid: "S" + index,
             parts: [
               {
                 model: "Motor2",
-                position: [0, M_POS, 0],
+                position: [0, 1.2, 0],
                 uid: "XM" + index,
                 parts: [
                   {
                     model: "Shaft2",
                     position: [0, 0, 0],
-                    rotation: [0, 0, 0 /* Change */],
+                    rotation: [0, 0, 1 /* Change */],
                     scale: [0.9, 0.9, 0.9],
                     uid: "XS" + index,
                     parts: parts,
@@ -141,11 +64,10 @@ export const ARobotNew2 = ({ position }) => {
       model: "Body3",
       position: [0, 0.5, 0],
       uid: "Base",
-      parts: MCount(COUNT),
+      parts: MCount(4),
     },
   ];
 
-  const FollowJoint = [];
 
   const PartSelector = ({ part }) => {
     if (part.model === "Group")
