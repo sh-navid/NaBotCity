@@ -1,4 +1,4 @@
-import React, { forwardRef, useMemo } from "react";
+import { forwardRef, useMemo } from "react";
 import { Endpoints } from "../configs/Endpoints";
 import { useGLTF } from "@react-three/drei";
 
