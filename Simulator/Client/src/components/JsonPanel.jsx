@@ -2,6 +2,8 @@
 import { useState, useEffect, useRef } from "react";
 import Prism from "prismjs";
 import "prismjs/components/prism-json";
+import "prismjs/plugins/line-numbers/prism-line-numbers.css";
+import "prismjs/plugins/line-numbers/prism-line-numbers.js";
 import "prismjs/themes/prism-tomorrow.css"; // You can use any Prism theme you like
 
 const JsonPanel = ({ json, onJsonChange, onSendToLLM }) => {
@@ -76,6 +78,7 @@ const JsonPanel = ({ json, onJsonChange, onSendToLLM }) => {
         aria-label="JSON Input"
       />
       <pre
+        className="line-numbers"
         style={{
           flex: 1,
           width: "100%",
