@@ -11,6 +11,11 @@ NaBotCity is a hobby project simulating robots. It's currently in early developm
 
 
 
+![](./Documents/Screenshots/V6.png)
+
+
+
+
 ## Instruction
 - To run project
     - Open 2 terminals in program root and run these command in each
