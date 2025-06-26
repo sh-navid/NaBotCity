@@ -9,6 +9,8 @@ const FullCanvasStyle = Object.freeze({
   height: "99.5vh",
   position: "absolute",
   border: "2px dotted black",
+  backgroundColor:"#212121",
+  zIndex:-1
 });
 
 const RobotCanvas = ({ children, camPosition =[-12, 12, 12]}) => {

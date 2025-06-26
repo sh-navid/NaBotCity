@@ -1,7 +1,9 @@
+/**/
 import { useRef, useEffect, createRef } from "react";
 import { Part } from "./Part";
+// REMOVE import Robot1 from "../json/Robot01.json";
 
-export const Robot = ({ position }) => {
+export const Robot = ({ position, robotJson }) => {
   const bodyRef = useRef();
   const PartRef = useRef({});
 
@@ -15,104 +17,7 @@ export const Robot = ({ position }) => {
     }
   }, [position]);
 
-  const Parts = [
-    {
-      model: "Body3",
-      position: [0, 0.5, 0],
-      uid: "Base",
-      parts: [
-        {
-          model: "Motor2",
-          position: [0, .7, 0],
-          rotation: [0, 0, 0],
-          scale: [0.9, 0.9, 0.9],
-          uid: "XM0",
-          parts: [
-            {
-              model: "Shaft2",
-              position: [0, 0, 0],
-              rotation: [0, 0, 0.5],
-              scale: [0.9, 0.9, 0.9],
-              uid: "XS0",
-              parts: [
-                {
-                  model: "Motor2",
-                  position: [0, 1.2, 0],
-                  rotation: [0, 0, 0],
-                  scale: [0.9, 0.9, 0.9],
-                  uid: "XM1",
-                  parts: [
-                    {
-                      model: "Shaft2",
-                      position: [0, 0, 0],
-                      rotation: [0, 0, 0.5],
-                      scale: [0.9, 0.9, 0.9],
-                      uid: "XS1",
-                      parts: [
-                        {
-                          model: "Motor2",
-                          position: [0, 1.2, 0],
-                          rotation: [0, 0, 0],
-                          scale: [0.9, 0.9, 0.9],
-                          uid: "XM2",
-                          parts: [
-                            {
-                              model: "Shaft2",
-                              position: [0, 0, 0],
-                              rotation: [0, 0, 0.5],
-                              scale: [0.9, 0.9, 0.9],
-                              uid: "XS2",
-                              parts: [
-                                {
-                                  model: "Motor2",
-                                  position: [0, 1.2, 0],
-                                  rotation: [0, 0, 0],
-                                  scale: [0.9, 0.9, 0.9],
-                                  uid: "XM3",
-                                  parts: [
-                                    {
-                                      model: "Shaft2",
-                                      position: [0, 0, 0],
-                                      rotation: [0, 0, 0.5],
-                                      scale: [0.9, 0.9, 0.9],
-                                      uid: "XS3",
-                                      parts: [
-                                        {
-                                          model: "Motor2",
-                                          position: [0, 1.2, 0],
-                                          rotation: [0, 0, 0],
-                                          scale: [0.9, 0.9, 0.9],
-                                          uid: "XM4",
-                                          parts: [
-                                            {
-                                              model: "Shaft2",
-                                              position: [0, 0, 0],
-                                              rotation: [0, 0, 0.5],
-                                              scale: [0.9, 0.9, 0.9],
-                                              uid: "XS4",
-                                              parts: [],
-                                            },
-                                          ],
-                                        },
-                                      ],
-                                    },
-                                  ],
-                                },
-                              ],
-                            },
-                          ],
-                        },
-                      ],
-                    },
-                  ],
-                },
-              ],
-            },
-          ],
-        },
-      ],
-    },
-  ];
+  const Parts = robotJson ?? []; // <<-- Use the prop
 
   const PartSelector = ({ part }) => {
     if (part.model === "Group")

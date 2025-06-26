@@ -7,7 +7,7 @@ function createWindow() {
     width: 700,
     height: 500,
     frame: true,
-    transparent: false,
+    transparent: true,
     backgroundColor: "#00000000",
     icon: path.join(__dirname, 'assets/logo192.png'), // Add the path to your logo here
     webPreferences: {
