@@ -83,6 +83,46 @@ const PartEditor = ({ json, onJsonChange }) => {
     });
   };
 
+  // === DELETE HANDLER ===
+  const handleDeletePart = (path) => {
+    if (
+      !window.confirm(
+        "Delete this part and all its children? This cannot be undone."
+      )
+    )
+      return;
+
+    setEditedJson((prev) => {
+      const next = cloneDeep(prev);
+
+      // Top-level array case
+      if (path.length === 1) {
+        if (Array.isArray(next)) {
+          next.splice(path[0], 1);
+        } else {
+          return {}; // If root is a single node
+        }
+        setSelectedPath(null);
+        onJsonChange(next);
+        return next;
+      }
+
+      // Find parent
+      const parentPath = path.slice(0, -1);
+      const idx = path[path.length - 1];
+      const parent = findPartByPath(next, parentPath);
+
+      if (parent && Array.isArray(parent.parts)) {
+        parent.parts.splice(idx, 1);
+      }
+
+      setSelectedPath(null);
+      onJsonChange(next);
+      return next;
+    });
+  };
+  // === END DELETE HANDLER ===
+
   const renderTree = (part, path = []) => {
     const isSel = JSON.stringify(path) === JSON.stringify(selectedPath);
     return (
@@ -127,6 +167,19 @@ const PartEditor = ({ json, onJsonChange }) => {
                 }}
               >
                 + Sibling
+              </button>
+              <button
+                onClick={() => handleDeletePart(path)}
+                style={{
+                  ...buttonStyle,
+                  fontSize: "0.7em",
+                  padding: "3px 6px",
+                  background: "#e44",
+                  color: "#fff",
+                }}
+                title="Delete this part and all its children"
+              >
+                🗑 Delete
               </button>
             </div>
           )}
@@ -184,11 +237,7 @@ const PartEditor = ({ json, onJsonChange }) => {
                   type="checkbox"
                   checked={!!val}
                   onChange={(e) =>
-                    handleRotationControlChange(
-                      selectedPath,
-                      i,
-                      e.target.checked
-                    )
+                    handleRotationControlChange(selectedPath, i, e.target.checked)
                   }
                   style={{ marginRight: 4 }}
                 />
