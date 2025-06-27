@@ -1,4 +1,3 @@
-/**/
 import React, { useState, useEffect } from 'react';
 import cloneDeep from 'lodash/cloneDeep';
 import { Theme } from '../Theme';
@@ -11,7 +10,6 @@ const PartEditor = ({ json, onJsonChange }) => {
   // keep in sync when parent json changes
   useEffect(() => {
     setEditedJson(cloneDeep(json));
-    setSelectedPath(null);
   }, [json]);
 
   // helpers
@@ -186,7 +184,7 @@ const PartEditor = ({ json, onJsonChange }) => {
             : renderTree(editedJson,[0])}
         </ul>
       </div>
-      <div style={propsStyle}>{renderInputs()}</div>
+      {selectedPath && <div style={propsStyle}>{renderInputs()}</div>}
     </div>
   );
 };
