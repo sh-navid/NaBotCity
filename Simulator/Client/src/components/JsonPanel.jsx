@@ -1,3 +1,4 @@
+/* */
 import { useState, useEffect, useRef } from "react";
 import Prism from "prismjs";
 import "prismjs/components/prism-json";
@@ -6,6 +7,7 @@ import "prismjs/plugins/line-numbers/prism-line-numbers.js";
 import "prismjs/themes/prism-tomorrow.css";
 import { Theme } from "../Theme";
 import ControlPanel from "./ControlPanel";
+import PartEditor from "./PartEditor";
 
 function getAllPartsWithUid(json) {
   let result = [];
@@ -227,7 +229,7 @@ const JsonPanel = ({ json, onJsonChange, onSendToLLM }) => {
       {activeTab === "PartRotationControl" && (
         <ControlPanel partsList={partsList} onSliderChange={handleSlider} />
       )}
-      {activeTab === "PartEditor" && <div>Part editor content here</div>}
+      {activeTab === "PartEditor" && <PartEditor json={json} onJsonChange={onJsonChange} />}
       <div
         style={{
           display: "flex",
