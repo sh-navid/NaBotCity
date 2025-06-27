@@ -1,8 +1,10 @@
+/* */
 import React, { useState, useCallback, useEffect } from 'react';
 import { Theme } from '../Theme';
 
 const PartEditor = ({ json, onJsonChange }) => {
   const [editedJson, setEditedJson] = useState(JSON.parse(JSON.stringify(json))); // Deep copy
+  const [selectedPart, setSelectedPart] = useState(null);
   const modelOptions = ['Body2', 'JoinPart', 'Joint', 'Motor', 'Shaft', 'Wheel'];
 
   useEffect(() => {
@@ -22,9 +24,11 @@ const PartEditor = ({ json, onJsonChange }) => {
     });
   }, [onJsonChange]); // Include onJsonChange in the dependency array
 
-  const renderInputs = (path, part) => {
+  const renderInputs = (part, path) => {
+    if (!part) return <div>No part selected.</div>;
+
     return Object.entries(part).map(([key, value]) => {
-      if (key === 'parts') return null; // Skip rendering 'parts' here, it will be handled recursively
+      if (key === 'parts') return null;
 
       let inputElement = null;
       const currentPath = [...path];
@@ -115,7 +119,6 @@ const PartEditor = ({ json, onJsonChange }) => {
         );
       }
 
-      // Conditionally render labels and inputs in the same line for position, rotation, and scale
       if (['position', 'rotation', 'scale'].includes(key)) {
         return (
           <div key={key} style={{ marginBottom: '4px' }}>
@@ -134,34 +137,37 @@ const PartEditor = ({ json, onJsonChange }) => {
     });
   };
 
-  const renderPart = (part, path) => {
-    const currentPath = [...path, part];
+  const renderTree = (part, path = []) => {
     return (
-      <div
-        key={part.uid || Math.random()}
-        style={{
-          padding: '5px',
-          margin: '2px 0',
-          border: `1px solid ${Theme.PANEL_BORDER}`,
-          borderRadius: '3px',
-          background: Theme.CONTROL_BG,
-        }}
-      >
-        {renderInputs(path, part)}
+      <li key={part.uid || Math.random()}>
+        <button
+          onClick={() => setSelectedPart({part:part, path:path})}
+          style={{
+            background: Theme.HOVER_BG,
+            color: Theme.TEXT_ON_BG,
+            border: 'none',
+            padding: '2px 5px',
+            cursor: 'pointer',
+            textAlign: 'left',
+            width: '100%',
+            display: 'block',
+            borderRadius: '3px',
+            fontSize: '.75em',
+            ...(selectedPart?.part === part ? { background: Theme.ACTIVE_BG, color: 'white' } : {}),
+          }}
+        >
+          {part.model} ({part.uid})
+        </button>
         {part.parts && part.parts.length > 0 && (
-          <div style={{ marginLeft: '10px' }}>
+          <ul style={{ marginLeft: '10px' }}>
             {part.parts.map((child, index) => {
               const childPath = [...path, 'parts', index];
-              return renderPart(child, childPath);
+              return renderTree(child, childPath);
             })}
-          </div>
+          </ul>
         )}
-      </div>
+      </li>
     );
-  };
-
-  const handleApplyChanges = () => {
-    onJsonChange(editedJson);
   };
 
   return (
@@ -173,31 +179,43 @@ const PartEditor = ({ json, onJsonChange }) => {
         borderRadius: "10px",
         border: `1.3px solid ${Theme.PANEL_BORDER}`,
         boxShadow: "0 1.25px 5px #0002",
-        height: "100%", // Changed from maxHeight to height
+        height: "100%",
         overflowY: "auto",
         color: Theme.TEXT_ON_BG,
         fontSize: '0.8em',
+        display: 'flex',
+        flexDirection: 'column',
       }}
     >
-      {Array.isArray(editedJson) ? (
-        editedJson.map((part, index) => renderPart(part, [index]))
-      ) : (
-        renderPart(editedJson, [])
-      )}
-      {/* <button
-        onClick={handleApplyChanges}
-        style={{
-          background: Theme.CONTROL_ACCENT,
-          color: 'white',
-          border: 'none',
-          borderRadius: '5px',
-          padding: '8px 16px',
-          cursor: 'pointer',
-          marginTop: '10px',
-        }}
-      >
-        Apply Changes
-      </button> */}
+      <div style={{
+        flex: 1,
+        overflowY: 'auto',
+        marginBottom: '10px',
+        padding: '5px',
+        border: `1px solid ${Theme.PANEL_BORDER}`,
+        borderRadius: '3px',
+        background: Theme.PANEL_BG,
+      }}>
+        <ul style={{ listStyleType: 'none', padding: 0 }}>
+          {Array.isArray(editedJson) ? (
+            editedJson.map((part, index) => renderTree(part, [index]))
+          ) : (
+            renderTree(editedJson, [])
+          )}
+        </ul>
+      </div>
+
+      <div style={{
+        flex: 1,
+        overflowY: 'auto',
+        padding: '5px',
+        border: `1px solid ${Theme.PANEL_BORDER}`,
+        borderRadius: '3px',
+        background: Theme.PANEL_BG,
+      }}>
+        {selectedPart && renderInputs(selectedPart.part, selectedPart.path)}
+        {!selectedPart && <div style={{fontSize: '.85em', color: Theme.FAINT}}>Select a part from the tree to view/edit its properties.</div>}
+      </div>
     </div>
   );
 };
