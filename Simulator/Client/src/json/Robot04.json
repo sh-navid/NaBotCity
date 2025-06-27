@@ -1,29 +1,69 @@
 [
   {
     "model": "Body2",
-    "position": [-1.5, 1.3, 0],
+    "position": [-2.15, 1.3, 0],
     "rotation": [0, 0, 0],
     "rotationControl": [false, false, false],
     "scale": [1, 1, 1],
     "uid": "Base",
     "parts": [
       {
-        "model": "Wheel",
-        "position": [0, 0, 1.5],
+        "model": "Motor",
+        "position": [0, 0, 1.05],
         "rotation": [1.57, 0, 0],
         "rotationControl": [false, false, false],
         "scale": [1, 1, 1],
-        "uid": "W1",
-        "parts": []
+        "uid": "W1_M",
+        "parts": [
+          {
+            "model": "Shaft",
+            "position": [0, 0, 0],
+            "rotation": [0, 0, 0],
+            "rotationControl": [false, false, false],
+            "scale": [1, 1, 1],
+            "uid": "W1_S",
+            "parts": [
+              {
+                "model": "Wheel",
+                "position": [0, 0.3, 0],
+                "rotation": [0, 0, 0],
+                "rotationControl": [false, false, false],
+                "scale": [1, 1, 1],
+                "uid": "W1",
+                "parts": []
+              }
+            ]
+          }
+        ]
       },
       {
-        "model": "Wheel",
-        "position": [0, 0, -1.5],
-        "rotation": [1.57, 0, 0],
+        "model": "Motor",
+        "position": [0, 0, -1.05],
+        "rotation": [-1.57, 0, 0],
         "rotationControl": [false, false, false],
         "scale": [1, 1, 1],
-        "uid": "W2",
-        "parts": []
+        "uid": "W2_M",
+        "parts": [
+          {
+            "model": "Shaft",
+            "position": [0, 0, 0],
+            "rotation": [0, 0, 0],
+            "rotationControl": [false, false, false],
+            "scale": [1, 1, 1],
+            "uid": "W2_S",
+            "parts": [
+              {
+                "model": "Wheel",
+                "position": [0, 0.3, 0],
+                "rotation": [0, 0, 0],
+                "rotationControl": [false, false, false],
+                "scale": [1, 1, 1],
+                "uid": "W2",
+                "parts": []
+              }
+            ]
+          }
+        ]
       },
       {
         "model": "Joint",
@@ -93,11 +133,7 @@
                                         "model": "Joint",
                                         "position": [0, 1, 0],
                                         "rotation": [0, 0, 0],
-                                        "rotationControl": [
-                                          false,
-                                          false,
-                                          false
-                                        ],
+                                        "rotationControl": [false, false, false],
                                         "scale": [0.9, 0.9, 0.9],
                                         "uid": "M5",
                                         "parts": [
@@ -105,11 +141,7 @@
                                             "model": "JoinPart",
                                             "position": [0, 0, 0],
                                             "rotation": [0, 0, 0.5],
-                                            "rotationControl": [
-                                              false,
-                                              false,
-                                              false
-                                            ],
+                                            "rotationControl": [false, false, false],
                                             "scale": [1, 1, 1],
                                             "uid": "P5",
                                             "parts": []
@@ -134,32 +166,71 @@
       }
     ]
   },
-
   {
     "model": "Body2",
-    "position": [1.5, 1.3, 0],
+    "position": [2.15, 1.3, 0],
     "rotation": [0, 0, 0],
     "rotationControl": [false, false, false],
     "scale": [1, 1, 1],
     "uid": "Base",
     "parts": [
-      {
-        "model": "Wheel",
-        "position": [0, 0, 1.5],
+       {
+        "model": "Motor",
+        "position": [0, 0, 1.05],
         "rotation": [1.57, 0, 0],
         "rotationControl": [false, false, false],
         "scale": [1, 1, 1],
-        "uid": "W1",
-        "parts": []
+        "uid": "W1_M",
+        "parts": [
+          {
+            "model": "Shaft",
+            "position": [0, 0, 0],
+            "rotation": [0, 0, 0],
+            "rotationControl": [false, false, false],
+            "scale": [1, 1, 1],
+            "uid": "W1_S",
+            "parts": [
+              {
+                "model": "Wheel",
+                "position": [0, 0.3, 0],
+                "rotation": [0, 0, 0],
+                "rotationControl": [false, false, false],
+                "scale": [1, 1, 1],
+                "uid": "W1",
+                "parts": []
+              }
+            ]
+          }
+        ]
       },
       {
-        "model": "Wheel",
-        "position": [0, 0, -1.5],
-        "rotation": [1.57, 0, 0],
+        "model": "Motor",
+        "position": [0, 0, -1.05],
+        "rotation": [-1.57, 0, 0],
         "rotationControl": [false, false, false],
         "scale": [1, 1, 1],
-        "uid": "W2",
-        "parts": []
+        "uid": "W2_M",
+        "parts": [
+          {
+            "model": "Shaft",
+            "position": [0, 0, 0],
+            "rotation": [0, 0, 0],
+            "rotationControl": [false, false, false],
+            "scale": [1, 1, 1],
+            "uid": "W2_S",
+            "parts": [
+              {
+                "model": "Wheel",
+                "position": [0, 0.3, 0],
+                "rotation": [0, 0, 0],
+                "rotationControl": [false, false, false],
+                "scale": [1, 1, 1],
+                "uid": "W2",
+                "parts": []
+              }
+            ]
+          }
+        ]
       },
       {
         "model": "Joint",
@@ -229,11 +300,7 @@
                                         "model": "Joint",
                                         "position": [0, 1, 0],
                                         "rotation": [0, 0, 0],
-                                        "rotationControl": [
-                                          false,
-                                          false,
-                                          false
-                                        ],
+                                        "rotationControl": [false, false, false],
                                         "scale": [0.9, 0.9, 0.9],
                                         "uid": "M5",
                                         "parts": [
@@ -241,11 +308,7 @@
                                             "model": "JoinPart",
                                             "position": [0, 0, 0],
                                             "rotation": [0, 0, -0.5],
-                                            "rotationControl": [
-                                              false,
-                                              false,
-                                              false
-                                            ],
+                                            "rotationControl": [false, false, false],
                                             "scale": [1, 1, 1],
                                             "uid": "P5",
                                             "parts": []
@@ -265,6 +328,92 @@
                 ]
               }
             ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "model": "Body2",
+    "uid": "CenterBody",
+    "position": [0, 1.3, 0],
+    "rotation": [0, 0, 0],
+    "scale": [1, 1, 1],
+    "rotationControl": [false, false, false],
+    "parts": [
+      {
+        "model": "Motor",
+        "uid": "CB_M1",
+        "position": [1.075, 0, 0],
+        "rotation": [0, 0, -1.57],
+        "scale": [1, 1, 1],
+        "rotationControl": [false, false, false],
+        "parts": [
+          {
+            "model": "Shaft",
+            "uid": "CB_S1",
+            "position": [0, 0, 0],
+            "rotation": [0, 0, 0],
+            "scale": [1, 1, 1],
+            "rotationControl": [false, false, false],
+            "parts": []
+          }
+        ]
+      },
+      {
+        "model": "Motor",
+        "uid": "CB_M2",
+        "position": [-1.075, 0, 0],
+        "rotation": [0, 0, 1.57],
+        "scale": [1, 1, 1],
+        "rotationControl": [false, false, false],
+        "parts": [
+          {
+            "model": "Shaft",
+            "uid": "CB_S2",
+            "position": [0, 0, 0],
+            "rotation": [0, 0, 0],
+            "scale": [1, 1, 1],
+            "rotationControl": [false, false, false],
+            "parts": []
+          }
+        ]
+      },
+      {
+        "model": "Motor",
+        "uid": "CB_M3",
+        "position": [0, 0, 1.05],
+        "rotation": [1.57, 0, 0],
+        "scale": [1, 1, 1],
+        "rotationControl": [false, false, false],
+        "parts": [
+          {
+            "model": "Shaft",
+            "uid": "CB_S3",
+            "position": [0, 0, 0],
+            "rotation": [0, 0, 0],
+            "scale": [1, 1, 1],
+            "rotationControl": [false, false, false],
+            "parts": []
+          }
+        ]
+      },
+      {
+        "model": "Motor",
+        "uid": "CB_M4",
+        "position": [0, 0, -1.05],
+        "rotation": [-1.57, 0, 0],
+        "scale": [1, 1, 1],
+        "rotationControl": [false, false, false],
+        "parts": [
+          {
+            "model": "Shaft",
+            "uid": "CB_S4",
+            "position": [0, 0, 0],
+            "rotation": [0, 0, 0],
+            "scale": [1, 1, 1],
+            "rotationControl": [false, false, false],
+            "parts": []
           }
         ]
       }
