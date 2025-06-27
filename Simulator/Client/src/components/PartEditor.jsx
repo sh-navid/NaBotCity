@@ -3,7 +3,7 @@ import React, { useState, useCallback, useEffect } from 'react';
 import { Theme } from '../Theme';
 
 const PartEditor = ({ json, onJsonChange }) => {
-  const [editedJson, setEditedJson] = useState(JSON.parse(JSON.stringify(json))); // Deep copy
+  const [editedJson, setEditedJson] = useState(JSON.parse(JSON.stringify(json)));
   const [selectedPart, setSelectedPart] = useState(null);
   const modelOptions = ['Body2', 'JoinPart', 'Joint', 'Motor', 'Shaft', 'Wheel'];
 
@@ -11,18 +11,85 @@ const PartEditor = ({ json, onJsonChange }) => {
     setEditedJson(JSON.parse(JSON.stringify(json)));
   }, [json]);
 
+  useEffect(() => {
+    if (selectedPart) {
+      const currentPart = findPartByPath(editedJson, selectedPart.path);
+      setSelectedPart(prev => ({ ...prev, part: currentPart }));
+    }
+  }, [editedJson, selectedPart?.path]);
+
+
+  const findPartByPath = (json, path) => {
+    let current = Array.isArray(json) ? [...json] : { ...json };
+    if (!Array.isArray(current)) current = [current];
+
+    let part = current[path[0]];
+
+    for (let i = 1; i < path.length; i++) {
+      if (path[i] === 'parts') {
+        i++;
+        part = part["parts"][path[i]];
+      } else {
+        part = part[path[i]];
+      }
+    }
+    return part;
+  };
+
+
   const handleValueChange = useCallback((path, key, value) => {
     setEditedJson(prevJson => {
-      const newJson = JSON.parse(JSON.stringify(prevJson)); // Deep copy
-      let current = newJson;
-      for (let i = 0; i < path.length - 1; i++) {
-        current = current[path[i]];
+      const newJson = JSON.parse(JSON.stringify(prevJson));
+      let current = Array.isArray(newJson) ? newJson[0] : newJson;
+
+      if (!Array.isArray(newJson)) {
+        current = newJson;
+      } else {
+        current = newJson;
+        for (let i = 0; i < path.length - 1; i++) {
+          if (path[i] === 'parts') {
+            i++;
+            current = current[path[i - 1]]["parts"][path[i]];
+          } else {
+            current = current[path[i]];
+          }
+        }
       }
-      current[path[path.length - 1]][key] = value;
-      onJsonChange(newJson); // Notify parent component of the change
+
+      let obj = null;
+      if (Array.isArray(newJson)) {
+        obj = findPartByPath(newJson, path);
+      } else {
+        obj = findPartByPath(newJson, path);
+      }
+
+      let finalObj = current;
+      if (Array.isArray(path)) {
+        if (Array.isArray(newJson)) {
+          for (let i = 0; i < path.length - 1; i++) {
+            finalObj = current[path[i]];
+          }
+        }
+        else {
+          for (let i = 0; i < path.length - 1; i++) {
+            if (path[i] === 'parts') {
+              i++;
+            }
+            //finalObj = finalObj[path[i]];
+          }
+        }
+      }
+
+      if (obj) {
+        let currentPart = finalObj["parts"] ? finalObj["parts"][path[path.length - 1]] : finalObj[path[path.length - 1]]
+        if (currentPart) currentPart[key] = value;
+
+      }
+      onJsonChange(newJson);
       return newJson;
     });
-  }, [onJsonChange]); // Include onJsonChange in the dependency array
+  }, [onJsonChange]);
+
 
   const renderInputs = (part, path) => {
     if (!part) return <div>No part selected.</div>;
@@ -141,7 +208,7 @@ const PartEditor = ({ json, onJsonChange }) => {
     return (
       <li key={part.uid || Math.random()}>
         <button
-          onClick={() => setSelectedPart({part:part, path:path})}
+          onClick={() => setSelectedPart({ part: part, path: path })}
           style={{
             background: Theme.HOVER_BG,
             color: Theme.TEXT_ON_BG,
@@ -214,7 +281,7 @@ const PartEditor = ({ json, onJsonChange }) => {
         background: Theme.PANEL_BG,
       }}>
         {selectedPart && renderInputs(selectedPart.part, selectedPart.path)}
-        {!selectedPart && <div style={{fontSize: '.85em', color: Theme.FAINT}}>Select a part from the tree to view/edit its properties.</div>}
+        {!selectedPart && <div style={{ fontSize: '.85em', color: Theme.FAINT }}>Select a part from the tree to view/edit its properties.</div>}
       </div>
     </div>
   );
