@@ -1,16 +1,50 @@
-import React from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { Theme } from "../Theme";
 import Slider from "./Slider";
 
-const ControlPanel = ({ partsList, onSliderChange }) => {
-  const sliderMin = -Math.PI * 2;
-  const sliderMax = Math.PI * 2;
+// --- Utility for smooth slow oscillation --- //
+const oscillate = (t, min, max) => {
+  // Smooth sine wave between min/max — period about 8 seconds
+  return (max + min) / 2 + (max - min) / 2 * Math.sin(t);
+};
 
-  // Filter to only include parts with at least one true in rotationControl
+const OSCILLATION_SPEED = 0.01; // Lower is slower, in radians per frame (try 0.05-0.15)
+
+const ControlPanel = ({ partsList, onSliderChange }) => {
+  const sliderMin = -Math.PI /2;
+  const sliderMax = Math.PI /2;
+
+  const [autoEnabled, setAutoEnabled] = useState({});
+  const aniRefs = useRef({}); // { '<uid>_<axis>': time }
+
+  useEffect(() => {
+    let running = true;
+    function animate() {
+      if (!running) return;
+      Object.keys(autoEnabled).forEach((key) => {
+        if (autoEnabled[key]) {
+          // Slower, smooth: increment time slowly!
+          aniRefs.current[key] = (aniRefs.current[key] ?? 0) + OSCILLATION_SPEED;
+          // Parse key into uid and axis index
+          const [uid, ax] = key.split("_");
+          const axis = Number(ax);
+          const idx = partsList.findIndex((p) => p.uid === uid);
+          const value = oscillate(aniRefs.current[key], sliderMin, sliderMax);
+          onSliderChange(idx, axis, value);
+        }
+      });
+      requestAnimationFrame(animate);
+    }
+    animate();
+    return () => {
+      running = false;
+    };
+    // eslint-disable-next-line
+  }, [autoEnabled, partsList, onSliderChange]);
+
+  // Only show controllable joints
   const filteredParts = partsList.filter(
-    (part) =>
-      Array.isArray(part.rotationControl) &&
-      part.rotationControl.some(Boolean)
+    (part) => Array.isArray(part.rotationControl) && part.rotationControl.some(Boolean)
   );
 
   return (
@@ -32,7 +66,7 @@ const ControlPanel = ({ partsList, onSliderChange }) => {
           No controllable robot joints found.
         </div>
       )}
-      {filteredParts.map((part, fi) => (
+      {filteredParts.map((part) => (
         <div
           key={part.uid}
           style={{
@@ -41,7 +75,6 @@ const ControlPanel = ({ partsList, onSliderChange }) => {
             background: Theme.PANEL_BG,
             borderRadius: "8px",
             border: `1px solid ${Theme.PANEL_BORDER}`,
-            boxShadow: "none",
           }}
         >
           <div
@@ -55,37 +88,56 @@ const ControlPanel = ({ partsList, onSliderChange }) => {
           >
             <span style={{ color: Theme.CONTROL_ACCENT }}>{part.model}</span>
             &nbsp;
-            <span
-              style={{ color: Theme.FAINT, fontSize: ".95em", fontWeight: 450 }}
-            >
+            <span style={{ color: Theme.FAINT, fontSize: ".95em", fontWeight: 450 }}>
               UID:
             </span>
-            <span
-              style={{ color: "#e1e1ff", fontWeight: 400, marginLeft: "2px" }}
-            >
+            <span style={{ color: "#e1e1ff", fontWeight: 400, marginLeft: "2px" }}>
               {part.uid}
             </span>
           </div>
           {["X", "Y", "Z"].map((label, axis) =>
             part.rotationControl && part.rotationControl[axis] ? (
-              <Slider
-                key={label}
-                label={label}
-                axis={axis}
-                value={part.rotation?.[axis] ?? 0}
-                onChange={(e) =>
-                  onSliderChange(
-                    // Find the *original* index from partsList for callback
-                    partsList.findIndex(p => p.uid === part.uid),
-                    axis,
-                    parseFloat(e.target.value)
-                  )
-                }
-                min={sliderMin}
-                max={sliderMax}
-                step={0.01}
-                enabled={part.rotationControl[axis]}
-              />
+              <div key={label} style={{ display: "flex", alignItems: "center" }}>
+                <input
+                  type="checkbox"
+                  style={{ marginRight: 10, accentColor: Theme.ACCENT || "#70f" }}
+                  checked={!!autoEnabled[`${part.uid}_${axis}`]}
+                  onChange={(e) => {
+                    setAutoEnabled((prev) => ({
+                      ...prev,
+                      [`${part.uid}_${axis}`]: e.target.checked,
+                    }));
+                    // Optionally: reset or seed to current value when starting!
+                    if (e.target.checked) {
+                      // Seed sine phase from current value for smoothness
+                      const currentValue = part.rotation?.[axis] ?? 0;
+                      // Inverse sine mapping. Clamp to avoid NaN.
+                      const vNorm = Math.min(Math.max(
+                        (currentValue - (sliderMin + sliderMax) / 2) / ((sliderMax - sliderMin) / 2),
+                        -1
+                      ), 1);
+                      aniRefs.current[`${part.uid}_${axis}`] = Math.asin(vNorm);
+                    }
+                  }}
+                  title="Auto animate this axis"
+                />
+                <Slider
+                  label={label}
+                  axis={axis}
+                  value={part.rotation?.[axis] ?? 0}
+                  onChange={(e) =>
+                    onSliderChange(
+                      partsList.findIndex((p) => p.uid === part.uid),
+                      axis,
+                      parseFloat(e.target.value)
+                    )
+                  }
+                  min={sliderMin}
+                  max={sliderMax}
+                  step={0.01}
+                  enabled={part.rotationControl[axis] && !autoEnabled[`${part.uid}_${axis}`]}
+                />
+              </div>
             ) : null
           )}
         </div>
