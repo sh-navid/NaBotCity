@@ -1,10 +1,15 @@
 /* */
 /* */
-import React, { useState, useCallback } from 'react';
+/* */
+import React, { useState, useCallback, useEffect } from 'react';
 import { Theme } from '../Theme';
 
 const PartEditor = ({ json, onJsonChange }) => {
   const [editedJson, setEditedJson] = useState(JSON.parse(JSON.stringify(json))); // Deep copy
+
+  useEffect(() => {
+    setEditedJson(JSON.parse(JSON.stringify(json)));
+  }, [json]);
 
   const handleValueChange = useCallback((path, key, value) => {
     setEditedJson(prevJson => {
