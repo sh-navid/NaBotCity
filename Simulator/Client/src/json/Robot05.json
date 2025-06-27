@@ -37,7 +37,7 @@
                     "rotation": [0, 0, 0],
                     "rotationControl": [false, false, false],
                     "scale": [1, 1, 1],
-                    "uid": "W1_S",
+                    "uid": "W1_S_1",
                     "parts": [
                       {
                         "model": "Wheel",
@@ -86,7 +86,7 @@
                     "rotation": [0, 0, 0],
                     "rotationControl": [false, false, false],
                     "scale": [1, 1, 1],
-                    "uid": "W2_S",
+                    "uid": "W2_S_1",
                     "parts": [
                       {
                         "model": "Wheel",
@@ -220,7 +220,7 @@
     "rotation": [0, 0, 0],
     "rotationControl": [false, false, false],
     "scale": [1, 1, 1],
-    "uid": "Base",
+    "uid": "Base_1",
     "parts": [
       {
         "model": "Joint",
@@ -228,7 +228,7 @@
         "rotation": [1.57, 0, 0],
         "rotationControl": [false, false, false],
         "scale": [1, 1, 1],
-        "uid": "W1_J",
+        "uid": "W1_J_1",
         "parts": [
           {
             "model": "JoinPart",
@@ -236,7 +236,7 @@
             "rotation": [0, 0, 0],
             "rotationControl": [false, false, true],
             "scale": [1, 1, 1],
-            "uid": "W1_S",
+            "uid": "W1_S_2",
             "parts": [
               {
                 "model": "Motor",
@@ -244,7 +244,7 @@
                 "rotation": [0, 0, 0],
                 "rotationControl": [false, false, false],
                 "scale": [1, 1, 1],
-                "uid": "W1_M",
+                "uid": "W1_M_1",
                 "parts": [
                   {
                     "model": "Shaft",
@@ -252,7 +252,7 @@
                     "rotation": [0, 0, 0],
                     "rotationControl": [false, false, false],
                     "scale": [1, 1, 1],
-                    "uid": "W1_S",
+                    "uid": "W1_S_3",
                     "parts": [
                       {
                         "model": "Wheel",
@@ -260,7 +260,7 @@
                         "rotation": [0, 0, 0],
                         "rotationControl": [false, false, false],
                         "scale": [1, 1, 1],
-                        "uid": "W1",
+                        "uid": "W1_1",
                         "parts": []
                       }
                     ]
@@ -277,7 +277,7 @@
         "rotation": [-1.57, 0, 0],
         "rotationControl": [false, false, false],
         "scale": [1, 1, 1],
-        "uid": "W2_J",
+        "uid": "W2_J_1",
         "parts": [
           {
             "model": "JoinPart",
@@ -285,7 +285,7 @@
             "rotation": [0, 0, 0],
             "rotationControl": [false, false, true],
             "scale": [1, 1, 1],
-            "uid": "W2_S",
+            "uid": "W2_S_2",
             "parts": [
               {
                 "model": "Motor",
@@ -293,7 +293,7 @@
                 "rotation": [0, 0, 0],
                 "rotationControl": [false, false, false],
                 "scale": [1, 1, 1],
-                "uid": "W2_M",
+                "uid": "W2_M_1",
                 "parts": [
                   {
                     "model": "Shaft",
@@ -301,7 +301,7 @@
                     "rotation": [0, 0, 0],
                     "rotationControl": [false, false, false],
                     "scale": [1, 1, 1],
-                    "uid": "W2_S",
+                    "uid": "W2_S_3",
                     "parts": [
                       {
                         "model": "Wheel",
@@ -309,7 +309,7 @@
                         "rotation": [0, 0, 0],
                         "rotationControl": [false, false, false],
                         "scale": [1, 1, 1],
-                        "uid": "W2",
+                        "uid": "W2_1",
                         "parts": []
                       }
                     ]
@@ -326,7 +326,7 @@
         "rotation": [0, 0, 0],
         "rotationControl": [false, false, false],
         "scale": [1, 1, 1],
-        "uid": "M1",
+        "uid": "M1_1",
         "parts": [
           {
             "model": "JoinPart",
@@ -334,7 +334,7 @@
             "rotation": [0, 0, -0.5],
             "rotationControl": [false, false, false],
             "scale": [1, 1, 1],
-            "uid": "P1",
+            "uid": "P1_1",
             "parts": [
               {
                 "model": "Joint",
@@ -342,7 +342,7 @@
                 "rotation": [0, 0, 0],
                 "rotationControl": [false, false, false],
                 "scale": [0.9, 0.9, 0.9],
-                "uid": "M2",
+                "uid": "M2_1",
                 "parts": [
                   {
                     "model": "JoinPart",
@@ -350,7 +350,7 @@
                     "rotation": [0, 0, -0.5],
                     "rotationControl": [false, false, false],
                     "scale": [1, 1, 1],
-                    "uid": "P2",
+                    "uid": "P2_1",
                     "parts": [
                       {
                         "model": "Joint",
@@ -358,7 +358,7 @@
                         "rotation": [0, 0, 0],
                         "rotationControl": [false, false, false],
                         "scale": [0.9, 0.9, 0.9],
-                        "uid": "M3",
+                        "uid": "M3_1",
                         "parts": [
                           {
                             "model": "JoinPart",
@@ -366,7 +366,7 @@
                             "rotation": [0, 0, -0.5],
                             "rotationControl": [false, false, false],
                             "scale": [1, 1, 1],
-                            "uid": "P3",
+                            "uid": "P3_1",
                             "parts": [
                               {
                                 "model": "Joint",
@@ -374,7 +374,7 @@
                                 "rotation": [0, 0, 0],
                                 "rotationControl": [false, false, false],
                                 "scale": [0.9, 0.9, 0.9],
-                                "uid": "M4",
+                                "uid": "M4_1",
                                 "parts": [
                                   {
                                     "model": "JoinPart",
@@ -382,7 +382,7 @@
                                     "rotation": [0, 0, -0.5],
                                     "rotationControl": [false, false, false],
                                     "scale": [1, 1, 1],
-                                    "uid": "P4",
+                                    "uid": "P4_1",
                                     "parts": [
                                       {
                                         "model": "Joint",
@@ -394,7 +394,7 @@
                                           false
                                         ],
                                         "scale": [0.9, 0.9, 0.9],
-                                        "uid": "M5",
+                                        "uid": "M5_1",
                                         "parts": [
                                           {
                                             "model": "JoinPart",
@@ -406,7 +406,7 @@
                                               false
                                             ],
                                             "scale": [1, 1, 1],
-                                            "uid": "P5",
+                                            "uid": "P5_1",
                                             "parts": []
                                           }
                                         ]
