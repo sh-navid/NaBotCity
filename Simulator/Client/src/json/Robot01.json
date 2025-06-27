@@ -7,74 +7,137 @@
     "uid": "Base",
     "parts": [
       {
-        "model": "Joint",
-        "position": [0, 0.8, 0],
+        "model": "Motor",
+        "position": [0, 0.4, 0],
         "rotation": [0, 0, 0],
         "scale": [1, 1, 1],
         "uid": "M1",
         "parts": [
           {
-            "model": "JoinPart",
+            "model": "Shaft",
             "position": [0, 0, 0],
-            "rotation": [0, 0, 0.5],
-            "scale": [1, 1, 1],
-            "uid": "P1",
+            "rotation": [0, 0, 0],
+            "rotationControl": [false, true, false],
+            "scale": [0.95, 0.95, 0.95],
+            "uid": "S1",
             "parts": [
               {
                 "model": "Joint",
-                "position": [0, 1, 0],
+                "position": [0, 0.6, 0],
                 "rotation": [0, 0, 0],
                 "scale": [1, 1, 1],
-                "uid": "M2",
+                "uid": "J1",
                 "parts": [
                   {
                     "model": "JoinPart",
                     "position": [0, 0, 0],
                     "rotation": [0, 0, 0.5],
+                    "rotationControl": [false, false, true],
                     "scale": [1, 1, 1],
-                    "uid": "P2",
+                    "uid": "P1",
                     "parts": [
                       {
-                        "model": "Joint",
-                        "position": [0, 1, 0],
+                        "model": "Motor",
+                        "position": [0, 0.6, 0],
                         "rotation": [0, 0, 0],
                         "scale": [1, 1, 1],
-                        "uid": "M3",
+                        "uid": "M2",
                         "parts": [
                           {
-                            "model": "JoinPart",
+                            "model": "Shaft",
                             "position": [0, 0, 0],
-                            "rotation": [0, 0, 0.5],
-                            "scale": [1, 1, 1],
-                            "uid": "P3",
+                            "rotation": [0, 0, 0],
+                            "rotationControl": [false, true, false],
+                            "scale": [0.95, 0.95, 0.95],
+                            "uid": "S2",
                             "parts": [
                               {
                                 "model": "Joint",
-                                "position": [0, 1, 0],
+                                "position": [0, 0.6, 0],
                                 "rotation": [0, 0, 0],
                                 "scale": [1, 1, 1],
-                                "uid": "M4",
+                                "uid": "J2",
                                 "parts": [
                                   {
                                     "model": "JoinPart",
                                     "position": [0, 0, 0],
                                     "rotation": [0, 0, 0.5],
+                                    "rotationControl": [false, false, true],
                                     "scale": [1, 1, 1],
-                                    "uid": "P4",
+                                    "uid": "P2",
                                     "parts": [
                                       {
-                                        "model": "Joint",
-                                        "position": [0, 1, 0],
+                                        "model": "Motor",
+                                        "position": [0, 0.6, 0],
                                         "rotation": [0, 0, 0],
                                         "scale": [1, 1, 1],
-                                        "uid": "M5",
+                                        "uid": "M3",
                                         "parts": [
                                           {
-                                            "model": "JoinPart",
+                                            "model": "Shaft",
                                             "position": [0, 0, 0],
-                                            "rotation": [0, 0, 0.5],
-                                            "scale": [1, 1, 1],
-                                            "uid": "P5"
+                                            "rotation": [0, 0, 0],
+                                            "rotationControl": [false, true, false],
+                                            "scale": [0.95, 0.95, 0.95],
+                                            "uid": "S3",
+                                            "parts": [
+                                              {
+                                                "model": "Joint",
+                                                "position": [0, 0.6, 0],
+                                                "rotation": [0, 0, 0],
+                                                "scale": [1, 1, 1],
+                                                "uid": "J3",
+                                                "parts": [
+                                                  {
+                                                    "model": "JoinPart",
+                                                    "position": [0, 0, 0],
+                                                    "rotation": [0, 0, 0.5],
+                                                    "rotationControl": [false, false, true],
+                                                    "scale": [1, 1, 1],
+                                                    "uid": "P3",
+                                                    "parts": [
+                                                      {
+                                                        "model": "Motor",
+                                                        "position": [0, 0.6, 0],
+                                                        "rotation": [0, 0, 0],
+                                                        "scale": [1, 1, 1],
+                                                        "uid": "M4",
+                                                        "parts": [
+                                                          {
+                                                            "model": "Shaft",
+                                                            "position": [0, 0, 0],
+                                                            "rotation": [0, 0, 0],
+                                                            "rotationControl": [false, true, false],
+                                                            "scale": [0.95, 0.95, 0.95],
+                                                            "uid": "S4",
+                                                            "parts": [
+                                                              {
+                                                                "model": "Joint",
+                                                                "position": [0, 0.6, 0],
+                                                                "rotation": [0, 0, 0],
+                                                                "scale": [1, 1, 1],
+                                                                "uid": "J4",
+                                                                "parts": [
+                                                                  {
+                                                                    "model": "JoinPart",
+                                                                    "position": [0, 0, 0],
+                                                                    "rotation": [0, 0, 0.5],
+                                                                    "rotationControl": [false, false, true],
+                                                                    "scale": [1, 1, 1],
+                                                                    "uid": "P4",
+                                                                    "parts": []
+                                                                  }
+                                                                ]
+                                                              }
+                                                            ]
+                                                          }
+                                                        ]
+                                                      }
+                                                    ]
+                                                  }
+                                                ]
+                                              }
+                                            ]
                                           }
                                         ]
                                       }
