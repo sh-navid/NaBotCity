@@ -1,6 +1,3 @@
-/* */
-/* */
-/* */
 import React, { useState, useCallback, useEffect } from 'react';
 import { Theme } from '../Theme';
 
@@ -19,9 +16,10 @@ const PartEditor = ({ json, onJsonChange }) => {
         current = current[path[i]];
       }
       current[path[path.length - 1]][key] = value;
+      onJsonChange(newJson); // Notify parent component of the change
       return newJson;
     });
-  }, []);
+  }, [onJsonChange]); // Include onJsonChange in the dependency array
 
   const renderInputs = (path, part) => {
     return Object.entries(part).map(([key, value]) => {
@@ -155,7 +153,7 @@ const PartEditor = ({ json, onJsonChange }) => {
       ) : (
         renderPart(editedJson, [])
       )}
-      <button
+      {/* <button
         onClick={handleApplyChanges}
         style={{
           background: Theme.CONTROL_ACCENT,
@@ -168,7 +166,7 @@ const PartEditor = ({ json, onJsonChange }) => {
         }}
       >
         Apply Changes
-      </button>
+      </button> */}
     </div>
   );
 };
