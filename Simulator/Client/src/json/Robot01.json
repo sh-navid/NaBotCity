@@ -3,6 +3,7 @@
     "model": "Body2",
     "position": [0, 0.6, 0],
     "rotation": [0, 1, 0],
+    "rotationControl": [false, false, false],
     "scale": [1, 1, 1],
     "uid": "Base",
     "parts": [
@@ -10,6 +11,7 @@
         "model": "Motor",
         "position": [0, 0.4, 0],
         "rotation": [0, 0, 0],
+        "rotationControl": [false, false, false],
         "scale": [1, 1, 1],
         "uid": "M1",
         "parts": [
@@ -25,6 +27,7 @@
                 "model": "Joint",
                 "position": [0, 0.6, 0],
                 "rotation": [0, 0, 0],
+                "rotationControl": [false, false, false],
                 "scale": [1, 1, 1],
                 "uid": "J1",
                 "parts": [
@@ -40,6 +43,7 @@
                         "model": "Motor",
                         "position": [0, 0.6, 0],
                         "rotation": [0, 0, 0],
+                        "rotationControl": [false, false, false],
                         "scale": [1, 1, 1],
                         "uid": "M2",
                         "parts": [
@@ -55,6 +59,7 @@
                                 "model": "Joint",
                                 "position": [0, 0.6, 0],
                                 "rotation": [0, 0, 0],
+                                "rotationControl": [false, false, false],
                                 "scale": [1, 1, 1],
                                 "uid": "J2",
                                 "parts": [
@@ -70,6 +75,11 @@
                                         "model": "Motor",
                                         "position": [0, 0.6, 0],
                                         "rotation": [0, 0, 0],
+                                        "rotationControl": [
+                                          false,
+                                          false,
+                                          false
+                                        ],
                                         "scale": [1, 1, 1],
                                         "uid": "M3",
                                         "parts": [
@@ -77,7 +87,11 @@
                                             "model": "Shaft",
                                             "position": [0, 0, 0],
                                             "rotation": [0, 0, 0],
-                                            "rotationControl": [false, true, false],
+                                            "rotationControl": [
+                                              false,
+                                              true,
+                                              false
+                                            ],
                                             "scale": [0.95, 0.95, 0.95],
                                             "uid": "S3",
                                             "parts": [
@@ -85,6 +99,11 @@
                                                 "model": "Joint",
                                                 "position": [0, 0.6, 0],
                                                 "rotation": [0, 0, 0],
+                                                "rotationControl": [
+                                                  false,
+                                                  false,
+                                                  false
+                                                ],
                                                 "scale": [1, 1, 1],
                                                 "uid": "J3",
                                                 "parts": [
@@ -92,7 +111,11 @@
                                                     "model": "JoinPart",
                                                     "position": [0, 0, 0],
                                                     "rotation": [0, 0, 0.5],
-                                                    "rotationControl": [false, false, true],
+                                                    "rotationControl": [
+                                                      false,
+                                                      false,
+                                                      true
+                                                    ],
                                                     "scale": [1, 1, 1],
                                                     "uid": "P3",
                                                     "parts": [
@@ -100,30 +123,66 @@
                                                         "model": "Motor",
                                                         "position": [0, 0.6, 0],
                                                         "rotation": [0, 0, 0],
+                                                        "rotationControl": [
+                                                          false,
+                                                          false,
+                                                          false
+                                                        ],
                                                         "scale": [1, 1, 1],
                                                         "uid": "M4",
                                                         "parts": [
                                                           {
                                                             "model": "Shaft",
-                                                            "position": [0, 0, 0],
-                                                            "rotation": [0, 0, 0],
-                                                            "rotationControl": [false, true, false],
-                                                            "scale": [0.95, 0.95, 0.95],
+                                                            "position": [
+                                                              0, 0, 0
+                                                            ],
+                                                            "rotation": [
+                                                              0, 0, 0
+                                                            ],
+                                                            "rotationControl": [
+                                                              false,
+                                                              true,
+                                                              false
+                                                            ],
+                                                            "scale": [
+                                                              0.95, 0.95, 0.95
+                                                            ],
                                                             "uid": "S4",
                                                             "parts": [
                                                               {
                                                                 "model": "Joint",
-                                                                "position": [0, 0.6, 0],
-                                                                "rotation": [0, 0, 0],
-                                                                "scale": [1, 1, 1],
+                                                                "position": [
+                                                                  0, 0.6, 0
+                                                                ],
+                                                                "rotation": [
+                                                                  0, 0, 0
+                                                                ],
+                                                                "rotationControl": [
+                                                                  false,
+                                                                  false,
+                                                                  false
+                                                                ],
+                                                                "scale": [
+                                                                  1, 1, 1
+                                                                ],
                                                                 "uid": "J4",
                                                                 "parts": [
                                                                   {
                                                                     "model": "JoinPart",
-                                                                    "position": [0, 0, 0],
-                                                                    "rotation": [0, 0, 0.5],
-                                                                    "rotationControl": [false, false, true],
-                                                                    "scale": [1, 1, 1],
+                                                                    "position": [
+                                                                      0, 0, 0
+                                                                    ],
+                                                                    "rotation": [
+                                                                      0, 0, 0.5
+                                                                    ],
+                                                                    "rotationControl": [
+                                                                      false,
+                                                                      false,
+                                                                      true
+                                                                    ],
+                                                                    "scale": [
+                                                                      1, 1, 1
+                                                                    ],
                                                                     "uid": "P4",
                                                                     "parts": []
                                                                   }

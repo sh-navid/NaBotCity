@@ -3,6 +3,7 @@
     "model": "Body2",
     "position": [0, 0.6, 0],
     "rotation": [0, 1, 0],
+    "rotationControl": [false, false, false],
     "scale": [1, 1, 1],
     "uid": "Base",
     "parts": [
@@ -10,6 +11,7 @@
         "model": "Motor",
         "position": [0, 0.4, 0],
         "rotation": [0, 0, 0],
+        "rotationControl": [false, false, false],
         "scale": [1, 1, 1],
         "uid": "M1",
         "parts": [
@@ -25,6 +27,7 @@
                 "model": "Joint",
                 "position": [0, 0.6, 0],
                 "rotation": [0, 0, 0],
+                "rotationControl": [false, false, false],
                 "scale": [1, 1, 1],
                 "uid": "J1",
                 "parts": [
@@ -40,6 +43,7 @@
                         "model": "Motor",
                         "position": [0, 0.6, 0],
                         "rotation": [0, 0, 0],
+                        "rotationControl": [false, false, false],
                         "scale": [1, 1, 1],
                         "uid": "M2",
                         "parts": [
@@ -55,6 +59,7 @@
                                 "model": "Joint",
                                 "position": [0, 0.6, 0],
                                 "rotation": [0, 0, 0],
+                                "rotationControl": [false, false, false],
                                 "scale": [1, 1, 1],
                                 "uid": "J2",
                                 "parts": [
@@ -70,6 +75,7 @@
                                         "model": "Motor",
                                         "position": [0, 0.6, 0],
                                         "rotation": [0, 0, 0],
+                                        "rotationControl": [false, false, false],
                                         "scale": [1, 1, 1],
                                         "uid": "M3",
                                         "parts": [
@@ -85,6 +91,7 @@
                                                 "model": "Joint",
                                                 "position": [0, 0.6, 0],
                                                 "rotation": [0, 0, 0],
+                                                "rotationControl": [false, false, false],
                                                 "scale": [1, 1, 1],
                                                 "uid": "J3",
                                                 "parts": [
@@ -100,6 +107,7 @@
                                                         "model": "Motor",
                                                         "position": [0, 0.6, 0],
                                                         "rotation": [0, 0, 0],
+                                                        "rotationControl": [false, false, false],
                                                         "scale": [1, 1, 1],
                                                         "uid": "M4",
                                                         "parts": [
@@ -115,6 +123,7 @@
                                                                 "model": "Joint",
                                                                 "position": [0, 0.6, 0],
                                                                 "rotation": [0, 0, 0],
+                                                                "rotationControl": [false, false, false],
                                                                 "scale": [1, 1, 1],
                                                                 "uid": "J4",
                                                                 "parts": [
@@ -130,6 +139,7 @@
                                                                         "model": "Motor",
                                                                         "position": [0, 0.6, 0],
                                                                         "rotation": [0, 0, 0],
+                                                                        "rotationControl": [false, false, false],
                                                                         "scale": [1, 1, 1],
                                                                         "uid": "M5",
                                                                         "parts": [
@@ -139,12 +149,13 @@
                                                                             "rotation": [0, 1.5, 0],
                                                                             "rotationControl": [false, true, false],
                                                                             "scale": [0.95, 0.95, 0.95],
-                                                                            "uid": "S5",
+                                             "uid": "S5",
                                                                             "parts": [
                                                                               {
                                                                                 "model": "Joint",
                                                                                 "position": [0, 0.6, 0],
                                                                                 "rotation": [0, 0, 0],
+                                                                                "rotationControl": [false, false, false],
                                                                                 "scale": [1, 1, 1],
                                                                                 "uid": "J5",
                                                                                 "parts": [
@@ -160,6 +171,7 @@
                                                                                         "model": "Motor",
                                                                                         "position": [0, 0.6, 0],
                                                                                         "rotation": [0, 0, 0],
+                                                                                        "rotationControl": [false, false, false],
                                                                                         "scale": [1, 1, 1],
                                                                                         "uid": "M6",
                                                                                         "parts": [
@@ -169,12 +181,13 @@
                                                                                             "rotation": [0, 0, 0],
                                                                                             "rotationControl": [false, true, false],
                                                                                             "scale": [0.95, 0.95, 0.95],
-                                                                                            "uid": "S6",
+                                                                                                                         "uid": "S6",
                                                                                             "parts": [
                                                                                               {
                                                                                                 "model": "Joint",
                                                                                                 "position": [0, 0.6, 0],
                                                                                                 "rotation": [0, 0, 0],
+                                                                                                "rotationControl": [false, false, false],
                                                                                                 "scale": [1, 1, 1],
                                                                                                 "uid": "J6",
                                                                                                 "parts": [
@@ -190,6 +203,7 @@
                                                                                                         "model": "Motor",
                                                                                                         "position": [0, 0.6, 0],
                                                                                                         "rotation": [0, 0, 0],
+                                                                                                        "rotationControl": [false, false, false],
                                                                                                         "scale": [1, 1, 1],
                                                                                                         "uid": "M7",
                                                                                                         "parts": [
@@ -205,6 +219,7 @@
                                                                                                                 "model": "Joint",
                                                                                                                 "position": [0, 0.6, 0],
                                                                                                                 "rotation": [0, 0, 0],
+                                                                                                                "rotationControl": [false, false, false],
                                                                                                                 "scale": [1, 1, 1],
                                                                                                                 "uid": "J7",
                                                                                                                 "parts": [
@@ -220,6 +235,7 @@
                                                                                                                         "model": "Motor",
                                                                                                                         "position": [0, 0.6, 0],
                                                                                                                         "rotation": [0, 0, 0],
+                                                                                                                        "rotationControl": [false, false, false],
                                                                                                                         "scale": [1, 1, 1],
                                                                                                                         "uid": "M8",
                                                                                                                         "parts": [
@@ -235,6 +251,7 @@
                                                                                                                                 "model": "Joint",
                                                                                                                                 "position": [0, 0.6, 0],
                                                                                                                                 "rotation": [0, 0, 0],
+                                                                                                                                "rotationControl": [false, false, false],
                                                                                                                                 "scale": [1, 1, 1],
                                                                                                                                 "uid": "J8",
                                                                                                                                 "parts": [
@@ -250,6 +267,7 @@
                                                                                                                                         "model": "Motor",
                                                                                                                                         "position": [0, 0.6, 0],
                                                                                                                                         "rotation": [0, 0, 0],
+                                                                                                                                        "rotationControl": [false, false, false],
                                                                                                                                         "scale": [1, 1, 1],
                                                                                                                                         "uid": "M9",
                                                                                                                                         "parts": [
@@ -265,6 +283,7 @@
                                                                                                                                                 "model": "Joint",
                                                                                                                                                 "position": [0, 0.6, 0],
                                                                                                                                                 "rotation": [0, 0, 0],
+                                                                                                                                                "rotationControl": [false, false, false],
                                                                                                                                                 "scale": [1, 1, 1],
                                                                                                                                                 "uid": "J9",
                                                                                                                                                 "parts": [
@@ -280,6 +299,7 @@
                                                                                                                                                         "model": "Motor",
                                                                                                                                                         "position": [0, 0.6, 0],
                                                                                                                                                         "rotation": [0, 0, 0],
+                                                                                                                                                        "rotationControl": [false, false, false],
                                                                                                                                                         "scale": [1, 1, 1],
                                                                                                                                                         "uid": "M10",
                                                                                                                                                         "parts": [
@@ -295,6 +315,7 @@
                                                                                                                                                                 "model": "Joint",
                                                                                                                                                                 "position": [0, 0.6, 0],
                                                                                                                                                                 "rotation": [0, 0, 0],
+                                                                                                                                                                "rotationControl": [false, false, false],
                                                                                                                                                                 "scale": [1, 1, 1],
                                                                                                                                                                 "uid": "J10",
                                                                                                                                                                 "parts": [
