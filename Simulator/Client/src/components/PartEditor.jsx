@@ -3,6 +3,7 @@ import { Theme } from '../Theme';
 
 const PartEditor = ({ json, onJsonChange }) => {
   const [editedJson, setEditedJson] = useState(JSON.parse(JSON.stringify(json))); // Deep copy
+  const modelOptions = ['Body2', 'JoinPart', 'Joint', 'Motor', 'Shaft', 'Wheel'];
 
   useEffect(() => {
     setEditedJson(JSON.parse(JSON.stringify(json)));
@@ -38,7 +39,34 @@ const PartEditor = ({ json, onJsonChange }) => {
         handleValueChange(currentPath, key, parsedValue);
       };
 
-      if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') {
+      if (key === 'model') {
+        inputElement = (
+          <select
+            style={{
+              background: Theme.INPUT_BG,
+              color: Theme.INPUT_TEXT,
+              border: `1px solid ${Theme.INPUT_BORDER}`,
+              borderRadius: '3px',
+              padding: '2px',
+              margin: '1px 0',
+              width: '100%',
+              boxSizing: 'border-box',
+              fontSize: '0.75em',
+            }}
+            value={value}
+            onChange={(e) => {
+              handleValueChange(currentPath, key, e.target.value);
+            }}
+          >
+            {modelOptions.map((option) => (
+              <option key={option} value={option}>
+                {option}
+              </option>
+            ))}
+          </select>
+        );
+      }
+      else if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') {
         inputElement = (
           <input
             type="text"
@@ -46,11 +74,12 @@ const PartEditor = ({ json, onJsonChange }) => {
               background: Theme.INPUT_BG,
               color: Theme.INPUT_TEXT,
               border: `1px solid ${Theme.INPUT_BORDER}`,
-              borderRadius: '4px',
-              padding: '4px',
-              margin: '2px 0',
+              borderRadius: '3px',
+              padding: '2px',
+              margin: '1px 0',
               width: '100%',
               boxSizing: 'border-box',
+              fontSize: '0.75em',
             }}
             value={value}
             onChange={onChange}
@@ -58,7 +87,7 @@ const PartEditor = ({ json, onJsonChange }) => {
         );
       } else if (Array.isArray(value)) {
         inputElement = (
-          <div style={{ display: 'flex', gap: '5px' }}>
+          <div style={{ display: 'flex', gap: '2px' }}>
             {value.map((item, index) => (
               <input
                 key={index}
@@ -67,11 +96,12 @@ const PartEditor = ({ json, onJsonChange }) => {
                   background: Theme.INPUT_BG,
                   color: Theme.INPUT_TEXT,
                   border: `1px solid ${Theme.INPUT_BORDER}`,
-                  borderRadius: '4px',
-                  padding: '4px',
-                  margin: '2px 0',
+                  borderRadius: '3px',
+                  padding: '2px',
+                  margin: '1px 0',
                   width: '100%',
                   boxSizing: 'border-box',
+                  fontSize: '0.75em',
                 }}
                 value={item}
                 onChange={(e) => {
@@ -88,16 +118,16 @@ const PartEditor = ({ json, onJsonChange }) => {
       // Conditionally render labels and inputs in the same line for position, rotation, and scale
       if (['position', 'rotation', 'scale'].includes(key)) {
         return (
-          <div key={key} style={{ marginBottom: '8px' }}>
-            <label style={{ color: Theme.LABEL_COLOR, fontSize: '0.9em' }}>{key}:</label>
+          <div key={key} style={{ marginBottom: '4px' }}>
+            <label style={{ color: Theme.LABEL_COLOR, fontSize: '0.7em' }}>{key}:</label>
             {inputElement}
           </div>
         );
       }
 
       return (
-        <div key={key} style={{ marginBottom: '8px' }}>
-          <label style={{ color: Theme.LABEL_COLOR, fontSize: '0.9em' }}>{key}:</label>
+        <div key={key} style={{ marginBottom: '4px' }}>
+          <label style={{ color: Theme.LABEL_COLOR, fontSize: '0.7em' }}>{key}:</label>
           {inputElement}
         </div>
       );
@@ -110,16 +140,16 @@ const PartEditor = ({ json, onJsonChange }) => {
       <div
         key={part.uid || Math.random()}
         style={{
-          padding: '10px',
-          margin: '5px 0',
+          padding: '5px',
+          margin: '2px 0',
           border: `1px solid ${Theme.PANEL_BORDER}`,
-          borderRadius: '5px',
+          borderRadius: '3px',
           background: Theme.CONTROL_BG,
         }}
       >
         {renderInputs(path, part)}
         {part.parts && part.parts.length > 0 && (
-          <div style={{ marginLeft: '20px' }}>
+          <div style={{ marginLeft: '10px' }}>
             {part.parts.map((child, index) => {
               const childPath = [...path, 'parts', index];
               return renderPart(child, childPath);
@@ -138,14 +168,15 @@ const PartEditor = ({ json, onJsonChange }) => {
     <div
       style={{
         background: Theme.CONTROL_BG,
-        margin: "0 0 15px 0",
-        padding: "16px 16px 8px 16px",
-        borderRadius: "14px",
+        margin: "0 0 10px 0",
+        padding: "8px 8px 4px 8px",
+        borderRadius: "10px",
         border: `1.3px solid ${Theme.PANEL_BORDER}`,
-        boxShadow: "0 2.5px 10px #0002",
+        boxShadow: "0 1.25px 5px #0002",
         height: "100%", // Changed from maxHeight to height
         overflowY: "auto",
         color: Theme.TEXT_ON_BG,
+        fontSize: '0.8em',
       }}
     >
       {Array.isArray(editedJson) ? (
