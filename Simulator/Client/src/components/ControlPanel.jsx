@@ -1,4 +1,3 @@
-/* */
 import React from "react";
 import { Theme } from "../Theme";
 import Slider from "./Slider";
@@ -16,26 +15,11 @@ const ControlPanel = ({ partsList, onSliderChange }) => {
         borderRadius: "14px",
         border: `1.3px solid ${Theme.PANEL_BORDER}`,
         boxShadow: "0 2.5px 10px #0002",
-        maxHeight: "260px",
+        height: "100%", // Changed from maxHeight to height
         overflowY: "auto",
         color: Theme.TEXT_ON_BG,
       }}
     >
-      <div
-        style={{
-          color: Theme.LABEL_COLOR,
-          fontSize: "1.06rem",
-          fontWeight: 550,
-        }}
-      >
-        Parts Rotation Control
-      </div>
-      <div
-        style={{
-          borderTop: `1px solid ${Theme.PANEL_BORDER}`,
-          margin: "9px 0 8px 0",
-        }}
-      />
       {partsList.length === 0 && (
         <div style={{ color: Theme.FAINT, marginTop: 6, fontSize: ".99rem" }}>
           No robot parts found.
@@ -63,7 +47,7 @@ const ControlPanel = ({ partsList, onSliderChange }) => {
             }}
           >
             <span style={{ color: Theme.CONTROL_ACCENT }}>{part.model}</span>
-            &nbsp;{" "}
+            &nbsp;
             <span
               style={{ color: Theme.FAINT, fontSize: ".95em", fontWeight: 450 }}
             >
