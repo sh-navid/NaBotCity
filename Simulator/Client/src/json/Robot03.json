@@ -24,7 +24,7 @@
                 "model": "Joint",
                 "position": [0, 1, 0],
                 "rotation": [0, 0, 0],
-                "scale": [1, 1, 1],
+                "scale": [0.9, 0.9, 0.9],
                 "uid": "M2",
                 "parts": [
                   {
@@ -38,7 +38,7 @@
                         "model": "Joint",
                         "position": [0, 1, 0],
                         "rotation": [0, 0, 0],
-                        "scale": [1, 1, 1],
+                        "scale": [0.9, 0.9, 0.9],
                         "uid": "M3",
                         "parts": [
                           {
@@ -52,7 +52,7 @@
                                 "model": "Joint",
                                 "position": [0, 1, 0],
                                 "rotation": [0, 0, 0],
-                                "scale": [1, 1, 1],
+                                "scale": [0.9, 0.9, 0.9],
                                 "uid": "M4",
                                 "parts": [
                                   {
@@ -66,7 +66,7 @@
                                         "model": "Joint",
                                         "position": [0, 1, 0],
                                         "rotation": [0, 0, 0],
-                                        "scale": [1, 1, 1],
+                                        "scale": [0.9, 0.9, 0.9],
                                         "uid": "M5",
                                         "parts": [
                                           {

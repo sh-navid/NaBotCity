@@ -1,38 +1,74 @@
 [
   {
-    "model": "Body3",
-    "position": [0, 0.5, 0],
+    "model": "Body2",
+    "position": [0, 0.6, 0],
+    "rotation": [0, 1, 0],
+    "scale": [1, 1, 1],
     "uid": "Base",
     "parts": [
       {
-        "model": "Motor2",
-        "position": [0, 0.7, 0],
+        "model": "Motor",
+        "position": [0, 0.4, 0],
         "rotation": [0, 0, 0],
-        "scale": [0.9, 0.9, 0.9],
-        "uid": "XM0",
+        "scale": [1, 1, 1],
+        "uid": "M1",
         "parts": [
           {
-            "model": "Shaft2",
+            "model": "Shaft",
             "position": [0, 0, 0],
-            "rotation": [0, 0, 0.5],
-            "scale": [0.9, 0.9, 0.9],
-            "uid": "XS0",
+            "rotation": [0, 0, 0],
+            "scale": [0.95, 0.95, 0.95],
+            "uid": "S1",
             "parts": [
               {
-                "model": "Motor2",
-                "position": [0, 1.2, 0],
+                "model": "Joint",
+                "position": [0, 0.6, 0],
                 "rotation": [0, 0, 0],
-                "scale": [0.9, 0.9, 0.9],
-                "uid": "XM1",
+                "scale": [1, 1, 1],
+                "uid": "J1",
                 "parts": [
                   {
-                    "model": "Shaft2",
+                    "model": "JoinPart",
                     "position": [0, 0, 0],
                     "rotation": [0, 0, 0.5],
-                    "scale": [0.9, 0.9, 0.9],
-                    "uid": "XS1",
+                    "scale": [1, 1, 1],
+                    "uid": "P1",
                     "parts": [
-
+                      {
+                        "model": "Motor",
+                        "position": [0, 0.6, 0],
+                        "rotation": [0, 0, 0],
+                        "scale": [1, 1, 1],
+                        "uid": "M2",
+                        "parts": [
+                          {
+                            "model": "Shaft",
+                            "position": [0, 0, 0],
+                            "rotation": [0, 0, 0],
+                            "scale": [0.95, 0.95, 0.95],
+                            "uid": "S2",
+                            "parts": [
+                              {
+                                "model": "Joint",
+                                "position": [0, 0.6, 0],
+                                "rotation": [0, 0, 0],
+                                "scale": [1, 1, 1],
+                                "uid": "J2",
+                                "parts": [
+                                  {
+                                    "model": "JoinPart",
+                                    "position": [0, 0, 0],
+                                    "rotation": [0, 0, 0.5],
+                                    "scale": [1, 1, 1],
+                                    "uid": "P2",
+                                    "parts": []
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
                     ]
                   }
                 ]
