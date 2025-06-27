@@ -6,6 +6,13 @@ const ControlPanel = ({ partsList, onSliderChange }) => {
   const sliderMin = -Math.PI * 2;
   const sliderMax = Math.PI * 2;
 
+  // Filter to only include parts with at least one true in rotationControl
+  const filteredParts = partsList.filter(
+    (part) =>
+      Array.isArray(part.rotationControl) &&
+      part.rotationControl.some(Boolean)
+  );
+
   return (
     <div
       style={{
@@ -15,17 +22,17 @@ const ControlPanel = ({ partsList, onSliderChange }) => {
         borderRadius: "14px",
         border: `1.3px solid ${Theme.PANEL_BORDER}`,
         boxShadow: "0 2.5px 10px #0002",
-        height: "100%", // Changed from maxHeight to height
+        height: "100%",
         overflowY: "auto",
         color: Theme.TEXT_ON_BG,
       }}
     >
-      {partsList.length === 0 && (
+      {filteredParts.length === 0 && (
         <div style={{ color: Theme.FAINT, marginTop: 6, fontSize: ".99rem" }}>
-          No robot parts found.
+          No controllable robot joints found.
         </div>
       )}
-      {partsList.map((part, i) => (
+      {filteredParts.map((part, fi) => (
         <div
           key={part.uid}
           style={{
@@ -67,7 +74,12 @@ const ControlPanel = ({ partsList, onSliderChange }) => {
                 axis={axis}
                 value={part.rotation?.[axis] ?? 0}
                 onChange={(e) =>
-                  onSliderChange(i, axis, parseFloat(e.target.value))
+                  onSliderChange(
+                    // Find the *original* index from partsList for callback
+                    partsList.findIndex(p => p.uid === part.uid),
+                    axis,
+                    parseFloat(e.target.value)
+                  )
                 }
                 min={sliderMin}
                 max={sliderMax}
