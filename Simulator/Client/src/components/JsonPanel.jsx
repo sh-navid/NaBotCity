@@ -5,6 +5,7 @@ import "prismjs/components/prism-json";
 import "prismjs/plugins/line-numbers/prism-line-numbers.css";
 import "prismjs/plugins/line-numbers/prism-line-numbers.js";
 import "prismjs/themes/prism-tomorrow.css";
+import { Theme } from "../Theme";
 
 function getAllPartsWithUid(json) {
   let result = [];
@@ -23,16 +24,6 @@ function getAllPartsWithUid(json) {
   else if (typeof json === "object" && json !== null) recur([json]);
   return result;
 }
-
-const PANEL_BG = "#212121";
-const PANEL_BORDER = "#323232";
-const CONTROL_BG = "#232323";
-const CONTROL_ACCENT = "#a259e6";
-const LABEL_COLOR = "#ece8f8";
-const FAINT = "#ababab";
-const SLIDER_COL = "#424242";
-const SLIDER_BG = "#292929";
-const TEXT_ON_BG = "#efebfd";
 
 const JsonPanel = ({ json, onJsonChange, onSendToLLM }) => {
   const [jsonString, setJsonString] = useState(JSON.stringify(json, null, 2));
@@ -98,15 +89,15 @@ const JsonPanel = ({ json, onJsonChange, onSendToLLM }) => {
   const styles = `
   .jpanel-slider {
     width: 100%;
-    accent-color: ${CONTROL_ACCENT};
+    accent-color: ${Theme.CONTROL_ACCENT};
     background: transparent;
     height: 24px;
     margin: 0 9px;
     border-radius: 4px;
   }
   .jpanel-slider::-webkit-slider-thumb {
-    background: ${CONTROL_ACCENT};
-    border: 1px solid ${PANEL_BORDER};
+    background: ${Theme.CONTROL_ACCENT};
+    border: 1px solid ${Theme.PANEL_BORDER};
     border-radius: 50%;
     width: 20px;
     height: 20px;
@@ -114,32 +105,32 @@ const JsonPanel = ({ json, onJsonChange, onSendToLLM }) => {
     cursor: pointer;
   }
   .jpanel-slider::-webkit-slider-runnable-track {
-    background: ${SLIDER_BG};
+    background: ${Theme.SLIDER_BG};
     height: 8px;
     border-radius: 4px;
   }
   .jpanel-slider::-moz-range-thumb {
-    background: ${CONTROL_ACCENT};
-    border: 1px solid ${PANEL_BORDER};
+    background: ${Theme.CONTROL_ACCENT};
+    border: 1px solid ${Theme.PANEL_BORDER};
     border-radius: 50%;
     width: 20px;
     height: 20px;
     cursor: pointer;
   }
   .jpanel-slider::-moz-range-track {
-    background: ${SLIDER_BG};
+    background: ${Theme.SLIDER_BG};
     height: 8px;
     border-radius: 4px;
   }
   .jpanel-slider:focus {
-    outline: 1.5px solid ${CONTROL_ACCENT};
+    outline: 1.5px solid ${Theme.CONTROL_ACCENT};
   }
   .jpanel-scroll::-webkit-scrollbar {
     width: 8px;
-    background: ${PANEL_BG};
+    background: ${Theme.PANEL_BG};
   }
   .jpanel-scroll::-webkit-scrollbar-thumb {
-    background: ${PANEL_BORDER};
+    background: ${Theme.PANEL_BORDER};
     border-radius: 10px;
   }
   `;
@@ -155,8 +146,8 @@ const JsonPanel = ({ json, onJsonChange, onSendToLLM }) => {
         top: 0,
         width: "400px",
         height: "100%",
-        background: PANEL_BG,
-        borderRight: `1.5px solid ${PANEL_BORDER}`,
+        background: Theme.PANEL_BG,
+        borderRight: `1.5px solid ${Theme.PANEL_BORDER}`,
         overflow: "auto",
         padding: "14px 13px 7px 15px",
         boxSizing: "border-box",
@@ -167,25 +158,25 @@ const JsonPanel = ({ json, onJsonChange, onSendToLLM }) => {
     >
       <style>{styles}</style>
       <div style={{
-        background: CONTROL_BG,
+        background: Theme.CONTROL_BG,
         margin: "0 0 15px 0",
         padding: "16px 16px 8px 16px",
         borderRadius: "14px",
-        border: `1.3px solid ${PANEL_BORDER}`,
+        border: `1.3px solid ${Theme.PANEL_BORDER}`,
         boxShadow: "0 2.5px 10px #0002",
         maxHeight: "260px",
         overflowY: "auto",
-        color: TEXT_ON_BG
+        color: Theme.TEXT_ON_BG
       }}>
         <div style={{
-          color: LABEL_COLOR, fontSize: "1.06rem", fontWeight: 550
+          color: Theme.LABEL_COLOR, fontSize: "1.06rem", fontWeight: 550
         }}>Parts Rotation Control</div>
         <div style={{
-            borderTop: `1px solid ${PANEL_BORDER}`,
+            borderTop: `1px solid ${Theme.PANEL_BORDER}`,
             margin: "9px 0 8px 0"
         }} />
         {partsList.length === 0 && (
-          <div style={{ color: FAINT, marginTop: 6, fontSize: ".99rem" }}>
+          <div style={{ color: Theme.FAINT, marginTop: 6, fontSize: ".99rem" }}>
             No robot parts found.
           </div>
         )}
@@ -193,17 +184,17 @@ const JsonPanel = ({ json, onJsonChange, onSendToLLM }) => {
           <div key={part.uid} style={{
             margin: "0.8em 0 .95em 0",
             padding: "12px 12px 10px 12px",
-            background: PANEL_BG,
+            background: Theme.PANEL_BG,
             borderRadius: "8px",
-            border: `1px solid ${PANEL_BORDER}`,
+            border: `1px solid ${Theme.PANEL_BORDER}`,
             boxShadow: "none",
           }}>
             <div style={{
-              color: LABEL_COLOR, fontWeight: 500, fontSize: "0.96em", marginBottom: "0.6em",
+              color: Theme.LABEL_COLOR, fontWeight: 500, fontSize: "0.96em", marginBottom: "0.6em",
               letterSpacing: ".01em"
             }}>
-              <span style={{ color: CONTROL_ACCENT }}>{part.model}</span>
-              &nbsp; <span style={{ color: FAINT, fontSize: ".95em", fontWeight: 450 }}>UID:</span>
+              <span style={{ color: Theme.CONTROL_ACCENT }}>{part.model}</span>
+              &nbsp; <span style={{ color: Theme.FAINT, fontSize: ".95em", fontWeight: 450 }}>UID:</span>
               <span style={{ color: "#e1e1ff", fontWeight: 400, marginLeft: "2px" }}>{part.uid}</span>
             </div>
             {["X", "Y", "Z"].map((label, axis) =>
@@ -212,7 +203,7 @@ const JsonPanel = ({ json, onJsonChange, onSendToLLM }) => {
                   margin: "7px 0", display: "flex", alignItems: "center", height: 24
                 }}>
                   <span style={{
-                    width: "2.3em", color: CONTROL_ACCENT, fontWeight: 600, fontSize: "1em"
+                    width: "2.3em", color: Theme.CONTROL_ACCENT, fontWeight: 600, fontSize: "1em"
                   }}>R{label}</span>
                   <input
                     className="jpanel-slider"
@@ -224,7 +215,7 @@ const JsonPanel = ({ json, onJsonChange, onSendToLLM }) => {
                     onChange={e => handleSlider(i, axis, parseFloat(e.target.value))}
                   />
                   <span style={{
-                    minWidth: 48, color: LABEL_COLOR,
+                    minWidth: 48, color: Theme.LABEL_COLOR,
                     fontSize: "0.96em", marginLeft: 7, textAlign: 'right'
                   }}>
                     {(part.rotation?.[axis] ?? 0).toFixed(2)}
@@ -246,9 +237,9 @@ const JsonPanel = ({ json, onJsonChange, onSendToLLM }) => {
         style={{
           flex: 1,
           width: "100%",
-          background: CONTROL_BG,
-          color: TEXT_ON_BG,
-          border: isValidJson ? `1.3px solid ${PANEL_BORDER}` : "1.3px solid #e44f69",
+          background: Theme.CONTROL_BG,
+          color: Theme.TEXT_ON_BG,
+          border: isValidJson ? `1.3px solid ${Theme.PANEL_BORDER}` : `1.3px solid ${Theme.WARNING}`,
           borderRadius: "0.6rem",
           height: "100%",
           minHeight: 0,
@@ -270,8 +261,8 @@ const JsonPanel = ({ json, onJsonChange, onSendToLLM }) => {
             width: "100%",
             display: "block",
             background: "transparent",
-            color: TEXT_ON_BG,
-            caretColor: CONTROL_ACCENT,
+            color: Theme.TEXT_ON_BG,
+            caretColor: Theme.CONTROL_ACCENT,
             fontFamily: "JetBrains Mono,Consolas,monospace",
             minHeight: "250px",
             fontSize: "0.95rem"
@@ -295,9 +286,9 @@ const JsonPanel = ({ json, onJsonChange, onSendToLLM }) => {
           style={{
             flex: 1,
             borderRadius: "8px",
-            border: `1.3px solid ${PANEL_BORDER}`,
-            background: CONTROL_BG,
-            color: TEXT_ON_BG,
+            border: `1.3px solid ${Theme.INPUT_BORDER}`,
+            background: Theme.INPUT_BG,
+            color: Theme.INPUT_TEXT,
             padding: "7px 9px",
             outline: "none",
             boxShadow: "0 0 2.3px #252525 inset"
@@ -306,7 +297,7 @@ const JsonPanel = ({ json, onJsonChange, onSendToLLM }) => {
         <button
           onClick={handleSend}
           style={{
-            background: CONTROL_ACCENT,
+            background: Theme.CONTROL_ACCENT,
             color: "white",
             border: "none",
             borderRadius: "8px",

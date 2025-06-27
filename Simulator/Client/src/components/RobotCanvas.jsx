@@ -1,6 +1,8 @@
+/**/
 import { Canvas } from "@react-three/fiber";
 import { Physics } from "@react-three/rapier";
 import { OrbitControls } from "@react-three/drei";
+import { Theme } from "../Theme";
 
 const FullCanvasStyle = Object.freeze({
   top: "0",
@@ -8,9 +10,9 @@ const FullCanvasStyle = Object.freeze({
   width: "99.5vw",
   height: "99.5vh",
   position: "absolute",
-  border: "2px dotted black",
-  backgroundColor:"#212121",
-  zIndex:-1
+  border: `2px dotted ${Theme.PANEL_BORDER}`,
+  backgroundColor: Theme.PANEL_BG,
+  zIndex: -1,
 });
 
 const RobotCanvas = ({ children, camPosition =[-12, 12, 12]}) => {
