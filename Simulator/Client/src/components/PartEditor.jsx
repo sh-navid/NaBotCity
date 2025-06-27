@@ -1,3 +1,5 @@
+/**/
+/**/
 import React, { useState, useEffect } from 'react';
 import cloneDeep from 'lodash/cloneDeep';
 import { Theme } from '../Theme';
@@ -35,14 +37,17 @@ const PartEditor = ({ json, onJsonChange }) => {
     });
   };
 
-  // new handler for nested object fields (e.g. rotationControl.x)
-  const handleNestedValueChange = (path, parentKey, childKey, value) => {
+  // new handler for rotationControl
+  const handleRotationControlChange = (path, index, value) => {
     setEditedJson(prev => {
       const next = cloneDeep(prev);
       const part = findPartByPath(next, path);
-      if (!part[parentKey]) part[parentKey] = {};
-      part[parentKey][childKey] = value;
-      onJsonChange(next);
+      if (Array.isArray(part.rotationControl)) {
+          const newRotationControl = [...part.rotationControl];
+          newRotationControl[index] = value;
+          part.rotationControl = newRotationControl;
+          onJsonChange(next);
+      }
       return next;
     });
   };
@@ -53,7 +58,7 @@ const PartEditor = ({ json, onJsonChange }) => {
       const newPart = {
         model: 'Body2', uid: generateUid(),
         position: [0,0,0], rotation:[0,0,0], scale:[1,1,1],
-        rotationControl: { x: false, y: false, z: false },
+        rotationControl: [false, false, false],
         parts: []
       };
       if (mode==='child') {
@@ -116,18 +121,18 @@ const PartEditor = ({ json, onJsonChange }) => {
           </select>
         );
 
-      } else if (k === 'rotationControl' && typeof v === 'object') {
+      } else if (k === 'rotationControl' && Array.isArray(v)) {
         inp = (
           <div style={{display:'flex',gap:10,alignItems:'center'}}>
-            {['x','y','z'].map(axis => (
-              <label key={axis} style={{display:'flex',alignItems:'center',fontSize:'.75em',color:Theme.LABEL_COLOR}}>
+            {v.map((val, i) => (
+              <label key={i} style={{display:'flex',alignItems:'center',fontSize:'.75em',color:Theme.LABEL_COLOR}}>
                 <input
                   type="checkbox"
-                  checked={!!v[axis]}
-                  onChange={e=>handleNestedValueChange(selectedPath,k,axis,e.target.checked)}
+                  checked={!!val}
+                  onChange={e=>handleRotationControlChange(selectedPath, i, e.target.checked)}
                   style={{marginRight:4}}
                 />
-                {axis}
+                {['x', 'y', 'z'][i]}
               </label>
             ))}
           </div>
