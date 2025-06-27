@@ -1,11 +1,12 @@
-/**/
-import { useState, useEffect, useRef } from "react";
+/* */
+import React, { useState, useEffect, useRef } from "react";
 import Prism from "prismjs";
 import "prismjs/components/prism-json";
 import "prismjs/plugins/line-numbers/prism-line-numbers.css";
 import "prismjs/plugins/line-numbers/prism-line-numbers.js";
 import "prismjs/themes/prism-tomorrow.css";
 import { Theme } from "../Theme";
+import ControlPanel from "./ControlPanel";
 
 function getAllPartsWithUid(json) {
   let result = [];
@@ -87,44 +88,6 @@ const JsonPanel = ({ json, onJsonChange, onSendToLLM }) => {
   };
 
   const styles = `
-  .jpanel-slider {
-    width: 100%;
-    accent-color: ${Theme.CONTROL_ACCENT};
-    background: transparent;
-    height: 24px;
-    margin: 0 9px;
-    border-radius: 4px;
-  }
-  .jpanel-slider::-webkit-slider-thumb {
-    background: ${Theme.CONTROL_ACCENT};
-    border: 1px solid ${Theme.PANEL_BORDER};
-    border-radius: 50%;
-    width: 20px;
-    height: 20px;
-    appearance: none;
-    cursor: pointer;
-  }
-  .jpanel-slider::-webkit-slider-runnable-track {
-    background: ${Theme.SLIDER_BG};
-    height: 8px;
-    border-radius: 4px;
-  }
-  .jpanel-slider::-moz-range-thumb {
-    background: ${Theme.CONTROL_ACCENT};
-    border: 1px solid ${Theme.PANEL_BORDER};
-    border-radius: 50%;
-    width: 20px;
-    height: 20px;
-    cursor: pointer;
-  }
-  .jpanel-slider::-moz-range-track {
-    background: ${Theme.SLIDER_BG};
-    height: 8px;
-    border-radius: 4px;
-  }
-  .jpanel-slider:focus {
-    outline: 1.5px solid ${Theme.CONTROL_ACCENT};
-  }
   .jpanel-scroll::-webkit-scrollbar {
     width: 8px;
     background: ${Theme.PANEL_BG};
@@ -134,9 +97,6 @@ const JsonPanel = ({ json, onJsonChange, onSendToLLM }) => {
     border-radius: 10px;
   }
   `;
-
-  const sliderMin = -Math.PI * 2;
-  const sliderMax = Math.PI * 2;
 
   return (
     <div
@@ -157,75 +117,7 @@ const JsonPanel = ({ json, onJsonChange, onSendToLLM }) => {
       className="jpanel-scroll"
     >
       <style>{styles}</style>
-      <div style={{
-        background: Theme.CONTROL_BG,
-        margin: "0 0 15px 0",
-        padding: "16px 16px 8px 16px",
-        borderRadius: "14px",
-        border: `1.3px solid ${Theme.PANEL_BORDER}`,
-        boxShadow: "0 2.5px 10px #0002",
-        maxHeight: "260px",
-        overflowY: "auto",
-        color: Theme.TEXT_ON_BG
-      }}>
-        <div style={{
-          color: Theme.LABEL_COLOR, fontSize: "1.06rem", fontWeight: 550
-        }}>Parts Rotation Control</div>
-        <div style={{
-            borderTop: `1px solid ${Theme.PANEL_BORDER}`,
-            margin: "9px 0 8px 0"
-        }} />
-        {partsList.length === 0 && (
-          <div style={{ color: Theme.FAINT, marginTop: 6, fontSize: ".99rem" }}>
-            No robot parts found.
-          </div>
-        )}
-        {partsList.map((part, i) => (
-          <div key={part.uid} style={{
-            margin: "0.8em 0 .95em 0",
-            padding: "12px 12px 10px 12px",
-            background: Theme.PANEL_BG,
-            borderRadius: "8px",
-            border: `1px solid ${Theme.PANEL_BORDER}`,
-            boxShadow: "none",
-          }}>
-            <div style={{
-              color: Theme.LABEL_COLOR, fontWeight: 500, fontSize: "0.96em", marginBottom: "0.6em",
-              letterSpacing: ".01em"
-            }}>
-              <span style={{ color: Theme.CONTROL_ACCENT }}>{part.model}</span>
-              &nbsp; <span style={{ color: Theme.FAINT, fontSize: ".95em", fontWeight: 450 }}>UID:</span>
-              <span style={{ color: "#e1e1ff", fontWeight: 400, marginLeft: "2px" }}>{part.uid}</span>
-            </div>
-            {["X", "Y", "Z"].map((label, axis) =>
-              (part.rotationControl && part.rotationControl[axis]) ? (
-                <div key={label} style={{
-                  margin: "7px 0", display: "flex", alignItems: "center", height: 24
-                }}>
-                  <span style={{
-                    width: "2.3em", color: Theme.CONTROL_ACCENT, fontWeight: 600, fontSize: "1em"
-                  }}>R{label}</span>
-                  <input
-                    className="jpanel-slider"
-                    type="range"
-                    min={sliderMin}
-                    max={sliderMax}
-                    step={0.01}
-                    value={part.rotation?.[axis] ?? 0}
-                    onChange={e => handleSlider(i, axis, parseFloat(e.target.value))}
-                  />
-                  <span style={{
-                    minWidth: 48, color: Theme.LABEL_COLOR,
-                    fontSize: "0.96em", marginLeft: 7, textAlign: 'right'
-                  }}>
-                    {(part.rotation?.[axis] ?? 0).toFixed(2)}
-                  </span>
-                </div>
-              ) : null
-            )}
-          </div>
-        ))}
-      </div>
+      <ControlPanel partsList={partsList} onSliderChange={handleSlider} />
       <textarea
         value={jsonString}
         onChange={handleChange}
@@ -239,7 +131,9 @@ const JsonPanel = ({ json, onJsonChange, onSendToLLM }) => {
           width: "100%",
           background: Theme.CONTROL_BG,
           color: Theme.TEXT_ON_BG,
-          border: isValidJson ? `1.3px solid ${Theme.PANEL_BORDER}` : `1.3px solid ${Theme.WARNING}`,
+          border: isValidJson
+            ? `1.3px solid ${Theme.PANEL_BORDER}`
+            : `1.3px solid ${Theme.WARNING}`,
           borderRadius: "0.6rem",
           height: "100%",
           minHeight: 0,
@@ -265,18 +159,27 @@ const JsonPanel = ({ json, onJsonChange, onSendToLLM }) => {
             caretColor: Theme.CONTROL_ACCENT,
             fontFamily: "JetBrains Mono,Consolas,monospace",
             minHeight: "250px",
-            fontSize: "0.95rem"
+            fontSize: "0.95rem",
           }}
           tabIndex={0}
           contentEditable
           suppressContentEditableWarning
-          onInput={(e) => handleChange({ target: { value: e.currentTarget.innerText } })}
+          onInput={(e) =>
+            handleChange({ target: { value: e.currentTarget.innerText } })
+          }
           spellCheck={false}
         >
           {jsonString}
         </code>
       </pre>
-      <div style={{ display: "flex", gap: "6px", marginTop: "6px", alignItems: 'center' }}>
+      <div
+        style={{
+          display: "flex",
+          gap: "6px",
+          marginTop: "6px",
+          alignItems: "center",
+        }}
+      >
         <input
           type="text"
           value={inputValue}
@@ -291,7 +194,7 @@ const JsonPanel = ({ json, onJsonChange, onSendToLLM }) => {
             color: Theme.INPUT_TEXT,
             padding: "7px 9px",
             outline: "none",
-            boxShadow: "0 0 2.3px #252525 inset"
+            boxShadow: "0 0 2.3px #252525 inset",
           }}
         />
         <button
@@ -306,7 +209,7 @@ const JsonPanel = ({ json, onJsonChange, onSendToLLM }) => {
             fontWeight: 600,
             boxShadow: "0 1.7px 8px #5c338a0a",
             fontSize: "1.04em",
-            transition: "background 0.12s"
+            transition: "background 0.12s",
           }}
         >
           Send
