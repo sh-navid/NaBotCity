@@ -1,290 +1,185 @@
 /* */
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
+import cloneDeep from 'lodash/cloneDeep';
 import { Theme } from '../Theme';
 
 const PartEditor = ({ json, onJsonChange }) => {
-  const [editedJson, setEditedJson] = useState(JSON.parse(JSON.stringify(json)));
-  const [selectedPart, setSelectedPart] = useState(null);
-  const modelOptions = ['Body2', 'JoinPart', 'Joint', 'Motor', 'Shaft', 'Wheel'];
+  const [editedJson, setEditedJson] = useState(cloneDeep(json));
+  const [selectedPath, setSelectedPath] = useState(null);
+  const modelOptions = ['Body2','JoinPart','Joint','Motor','Shaft','Wheel'];
 
+  // keep in sync when parent json changes
   useEffect(() => {
-    setEditedJson(JSON.parse(JSON.stringify(json)));
+    setEditedJson(cloneDeep(json));
+    setSelectedPath(null);
   }, [json]);
 
-  useEffect(() => {
-    if (selectedPart) {
-      const currentPart = findPartByPath(editedJson, selectedPart.path);
-      setSelectedPart(prev => ({ ...prev, part: currentPart }));
-    }
-  }, [editedJson, selectedPart?.path]);
+  // helpers
+  const generateUid = () => Math.random().toString(36).slice(2,10);
 
-
-  const findPartByPath = (json, path) => {
-    let current = Array.isArray(json) ? [...json] : { ...json };
-    if (!Array.isArray(current)) current = [current];
-
-    let part = current[path[0]];
-
+  // path is an array of numeric indices: [0,2,1,...]
+  const findPartByPath = (root, path) => {
+    let arr = Array.isArray(root) ? root : [root];
+    let part = arr[path[0]];
     for (let i = 1; i < path.length; i++) {
-      if (path[i] === 'parts') {
-        i++;
-        part = part["parts"][path[i]];
-      } else {
-        part = part[path[i]];
-      }
+      part = part.parts[path[i]];
     }
     return part;
   };
 
-
-  const handleValueChange = useCallback((path, key, value) => {
-    setEditedJson(prevJson => {
-      const newJson = JSON.parse(JSON.stringify(prevJson));
-      let current = Array.isArray(newJson) ? newJson[0] : newJson;
-
-      if (!Array.isArray(newJson)) {
-        current = newJson;
-      } else {
-        current = newJson;
-        for (let i = 0; i < path.length - 1; i++) {
-          if (path[i] === 'parts') {
-            i++;
-            current = current[path[i - 1]]["parts"][path[i]];
-          } else {
-            current = current[path[i]];
-          }
-        }
-      }
-
-      let obj = null;
-      if (Array.isArray(newJson)) {
-        obj = findPartByPath(newJson, path);
-      } else {
-        obj = findPartByPath(newJson, path);
-      }
-
-      let finalObj = current;
-      if (Array.isArray(path)) {
-        if (Array.isArray(newJson)) {
-          for (let i = 0; i < path.length - 1; i++) {
-            finalObj = current[path[i]];
-          }
-        }
-        else {
-          for (let i = 0; i < path.length - 1; i++) {
-            if (path[i] === 'parts') {
-              i++;
-            }
-            //finalObj = finalObj[path[i]];
-          }
-        }
-      }
-
-      if (obj) {
-        let currentPart = finalObj["parts"] ? finalObj["parts"][path[path.length - 1]] : finalObj[path[path.length - 1]]
-        if (currentPart) currentPart[key] = value;
-
-      }
-      onJsonChange(newJson);
-      return newJson;
-    });
-  }, [onJsonChange]);
-
-
-  const renderInputs = (part, path) => {
-    if (!part) return <div>No part selected.</div>;
-
-    return Object.entries(part).map(([key, value]) => {
-      if (key === 'parts') return null;
-
-      let inputElement = null;
-      const currentPath = [...path];
-
-      const onChange = (e) => {
-        let parsedValue = e.target.value;
-        if (typeof value === 'number') {
-          parsedValue = parseFloat(e.target.value);
-        } else if (typeof value === 'boolean') {
-          parsedValue = e.target.value === 'true';
-        }
-        handleValueChange(currentPath, key, parsedValue);
-      };
-
-      if (key === 'model') {
-        inputElement = (
-          <select
-            style={{
-              background: Theme.INPUT_BG,
-              color: Theme.INPUT_TEXT,
-              border: `1px solid ${Theme.INPUT_BORDER}`,
-              borderRadius: '3px',
-              padding: '2px',
-              margin: '1px 0',
-              width: '100%',
-              boxSizing: 'border-box',
-              fontSize: '0.75em',
-            }}
-            value={value}
-            onChange={(e) => {
-              handleValueChange(currentPath, key, e.target.value);
-            }}
-          >
-            {modelOptions.map((option) => (
-              <option key={option} value={option}>
-                {option}
-              </option>
-            ))}
-          </select>
-        );
-      }
-      else if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') {
-        inputElement = (
-          <input
-            type="text"
-            style={{
-              background: Theme.INPUT_BG,
-              color: Theme.INPUT_TEXT,
-              border: `1px solid ${Theme.INPUT_BORDER}`,
-              borderRadius: '3px',
-              padding: '2px',
-              margin: '1px 0',
-              width: '100%',
-              boxSizing: 'border-box',
-              fontSize: '0.75em',
-            }}
-            value={value}
-            onChange={onChange}
-          />
-        );
-      } else if (Array.isArray(value)) {
-        inputElement = (
-          <div style={{ display: 'flex', gap: '2px' }}>
-            {value.map((item, index) => (
-              <input
-                key={index}
-                type="text"
-                style={{
-                  background: Theme.INPUT_BG,
-                  color: Theme.INPUT_TEXT,
-                  border: `1px solid ${Theme.INPUT_BORDER}`,
-                  borderRadius: '3px',
-                  padding: '2px',
-                  margin: '1px 0',
-                  width: '100%',
-                  boxSizing: 'border-box',
-                  fontSize: '0.75em',
-                }}
-                value={item}
-                onChange={(e) => {
-                  const newArray = [...value];
-                  newArray[index] = parseFloat(e.target.value);
-                  handleValueChange(currentPath, key, newArray);
-                }}
-              />
-            ))}
-          </div>
-        );
-      }
-
-      if (['position', 'rotation', 'scale'].includes(key)) {
-        return (
-          <div key={key} style={{ marginBottom: '4px' }}>
-            <label style={{ color: Theme.LABEL_COLOR, fontSize: '0.7em' }}>{key}:</label>
-            {inputElement}
-          </div>
-        );
-      }
-
-      return (
-        <div key={key} style={{ marginBottom: '4px' }}>
-          <label style={{ color: Theme.LABEL_COLOR, fontSize: '0.7em' }}>{key}:</label>
-          {inputElement}
-        </div>
-      );
+  const handleValueChange = (path, key, value) => {
+    setEditedJson(prev => {
+      const next = cloneDeep(prev);
+      const part = findPartByPath(next, path);
+      part[key] = value;
+      onJsonChange(next);
+      return next;
     });
   };
 
-  const renderTree = (part, path = []) => {
+  const handleAddPart = (mode, path) => {
+    setEditedJson(prev => {
+      const next = cloneDeep(prev);
+      const newPart = {
+        model: 'Body2', uid: generateUid(),
+        position: [0,0,0], rotation:[0,0,0], scale:[1,1,1],
+        parts: []
+      };
+      if (mode==='child') {
+        const parent = findPartByPath(next, path);
+        parent.parts.push(newPart);
+      } else { // sibling
+        const idx = path[path.length-1];
+        const parentArr = path.length === 1
+          ? (Array.isArray(next) ? next : next.parts)
+          : findPartByPath(next, path.slice(0,-1)).parts;
+        parentArr.splice(idx+1, 0, newPart);
+      }
+      onJsonChange(next);
+      return next;
+    });
+  };
+
+  const renderTree = (part, path=[]) => {
+    const isSel = JSON.stringify(path) === JSON.stringify(selectedPath);
     return (
-      <li key={part.uid || Math.random()}>
-        <button
-          onClick={() => setSelectedPart({ part: part, path: path })}
-          style={{
-            background: Theme.HOVER_BG,
-            color: Theme.TEXT_ON_BG,
-            border: 'none',
-            padding: '2px 5px',
-            cursor: 'pointer',
-            textAlign: 'left',
-            width: '100%',
-            display: 'block',
-            borderRadius: '3px',
-            fontSize: '.75em',
-            ...(selectedPart?.part === part ? { background: Theme.ACTIVE_BG, color: 'white' } : {}),
-          }}
-        >
-          {part.model} ({part.uid})
-        </button>
-        {part.parts && part.parts.length > 0 && (
-          <ul style={{ marginLeft: '10px' }}>
-            {part.parts.map((child, index) => {
-              const childPath = [...path, 'parts', index];
-              return renderTree(child, childPath);
-            })}
+      <li key={part.uid}>
+        <div style={{display:'flex',alignItems:'center'}}>
+          <button
+            onClick={()=> setSelectedPath(path)}
+            style={{
+              flexGrow:1,
+              fontSize:'.75em',
+              background: isSel ? Theme.ACTIVE_BG : Theme.HOVER_BG,
+              color: isSel ? '#fff' : Theme.TEXT_ON_BG,
+              border:'none',padding:'2px 5px',borderRadius:'3px',textAlign:'left'
+            }}>
+            {part.model} ({part.uid})
+          </button>
+          {isSel && <>
+            <button onClick={()=>handleAddPart('child', path)} style={buttonStyle}>+ Child</button>
+            <button onClick={()=>handleAddPart('sibling', path)} style={buttonStyle}>+ Sibling</button>
+          </>}
+        </div>
+        {part.parts.length>0 && (
+          <ul style={{marginLeft:10}}>
+            {part.parts.map((c,i)=>renderTree(c,[...path,i]))}
           </ul>
         )}
       </li>
     );
   };
 
+  const renderInputs = () => {
+    if (!selectedPath) return <div style={{color:Theme.FAINT}}>Select a part...</div>;
+    const part = findPartByPath(editedJson, selectedPath);
+    return Object.entries(part).map(([k,v]) => {
+      if (k==='parts') return null;
+      const label = <label style={{color:Theme.LABEL_COLOR,fontSize:'.7em'}}>{k}:</label>;
+      let inp;
+      if (k==='model') {
+        inp = (
+          <select value={v} onChange={e=>handleValueChange(selectedPath,k,e.target.value)} style={inputStyle}>
+            {modelOptions.map(o=><option key={o} value={o}>{o}</option>)}
+          </select>
+        );
+      } else if (Array.isArray(v)) {
+        inp = (
+          <div style={{display:'flex',gap:2}}>
+            {v.map((val,i)=>(
+              <input key={i}
+                     type="number"
+                     value={val}
+                     onChange={e=>{
+                       const arr = [...v]; arr[i]=parseFloat(e.target.value)||0;
+                       handleValueChange(selectedPath,k,arr);
+                     }}
+                     style={inputStyle}/>
+            ))}
+          </div>
+        );
+      } else if (typeof v==='boolean') {
+        inp = (
+          <select value={v.toString()} onChange={e=>handleValueChange(selectedPath,k,e.target.value==='true')} style={inputStyle}>
+            <option value="true">true</option>
+            <option value="false">false</option>
+          </select>
+        );
+      } else {
+        inp = (
+          <input
+            type={typeof v === 'number' ? 'number' : 'text'}
+            value={v}
+            onChange={e=>{
+              const val = typeof v==='number' ? parseFloat(e.target.value)||0 : e.target.value;
+              handleValueChange(selectedPath,k,val);
+            }}
+            style={inputStyle}
+          />
+        );
+      }
+      return <div key={k} style={{marginBottom:4}}>{label}{inp}</div>;
+    });
+  };
+
   return (
-    <div
-      style={{
-        background: Theme.CONTROL_BG,
-        margin: "0 0 10px 0",
-        padding: "8px 8px 4px 8px",
-        borderRadius: "10px",
-        border: `1.3px solid ${Theme.PANEL_BORDER}`,
-        boxShadow: "0 1.25px 5px #0002",
-        height: "100%",
-        overflowY: "auto",
-        color: Theme.TEXT_ON_BG,
-        fontSize: '0.8em',
-        display: 'flex',
-        flexDirection: 'column',
-      }}
-    >
-      <div style={{
-        flex: 1,
-        overflowY: 'auto',
-        marginBottom: '10px',
-        padding: '5px',
-        border: `1px solid ${Theme.PANEL_BORDER}`,
-        borderRadius: '3px',
-        background: Theme.PANEL_BG,
-      }}>
-        <ul style={{ listStyleType: 'none', padding: 0 }}>
-          {Array.isArray(editedJson) ? (
-            editedJson.map((part, index) => renderTree(part, [index]))
-          ) : (
-            renderTree(editedJson, [])
-          )}
+    <div style={containerStyle}>
+      <div style={treeStyle}>
+        <ul style={{listStyle:'none',padding:0}}>
+          {Array.isArray(editedJson)
+            ? editedJson.map((p,i)=>renderTree(p,[i]))
+            : renderTree(editedJson,[0])}
         </ul>
       </div>
-
-      <div style={{
-        flex: 1,
-        overflowY: 'auto',
-        padding: '5px',
-        border: `1px solid ${Theme.PANEL_BORDER}`,
-        borderRadius: '3px',
-        background: Theme.PANEL_BG,
-      }}>
-        {selectedPart && renderInputs(selectedPart.part, selectedPart.path)}
-        {!selectedPart && <div style={{ fontSize: '.85em', color: Theme.FAINT }}>Select a part from the tree to view/edit its properties.</div>}
-      </div>
+      <div style={propsStyle}>{renderInputs()}</div>
     </div>
   );
+};
+
+/* Shared inline styles for brevity */
+const buttonStyle = {
+  background: Theme.BUTTON_BG, color: Theme.BUTTON_TEXT,
+  border:'none',padding:'2px 5px',marginLeft:5,
+  borderRadius:3,fontSize:'.65em',cursor:'pointer'
+};
+const inputStyle = {
+  background: Theme.INPUT_BG, color: Theme.INPUT_TEXT,
+  border:`1px solid ${Theme.INPUT_BORDER}`,borderRadius:3,
+  padding:'2px',margin:'1px 0',width:'100%',boxSizing:'border-box',fontSize:'.75em'
+};
+const containerStyle = {
+  background:Theme.CONTROL_BG, display:'flex',flexDirection:'column',
+  padding:8,border:`1.3px solid ${Theme.PANEL_BORDER}`,borderRadius:10,
+  boxShadow:'0 1.25px 5px #0002',height:'100%'
+};
+const treeStyle = {
+  flex:1,overflowY:'auto',marginBottom:10,
+  padding:5,border:`1px solid ${Theme.PANEL_BORDER}`,
+  borderRadius:3,background:Theme.PANEL_BG
+};
+const propsStyle = {
+  flex:1,overflowY:'auto',padding:5,
+  border:`1px solid ${Theme.PANEL_BORDER}`,borderRadius:3,background:Theme.PANEL_BG
 };
 
 export default PartEditor;
