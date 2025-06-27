@@ -11,7 +11,7 @@ NaBotCity is a hobby project simulating robots. It's currently in early developm
 
 
 
-![](./Documents/Screenshots/V6.png)
+![](./Documents/Screenshots/V8.png)
 
 
 
@@ -22,3 +22,6 @@ NaBotCity is a hobby project simulating robots. It's currently in early developm
     - `npm run client`
     - `npm run server`
 
+
+## Future Works
+- [ ] When click on item in PartEditor, put a border on that part in 3D scene
