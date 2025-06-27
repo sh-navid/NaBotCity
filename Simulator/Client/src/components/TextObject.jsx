@@ -7,7 +7,7 @@ export const TextObject = forwardRef(
     return (
       <Text
         ref={ref}
-        color="blue"
+        color="white"
         anchorX="center"
         anchorY="middle"
         fontSize={fontSize}
