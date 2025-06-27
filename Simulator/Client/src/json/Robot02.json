@@ -10,6 +10,7 @@
         "model": "Motor",
         "position": [0, 0.4, 0],
         "rotation": [0, 0, 0],
+        
         "scale": [1, 1, 1],
         "uid": "M1",
         "parts": [
@@ -17,6 +18,7 @@
             "model": "Shaft",
             "position": [0, 0, 0],
             "rotation": [0, 0, 0],
+            "rotationControl": [false, true, false],
             "scale": [0.95, 0.95, 0.95],
             "uid": "S1",
             "parts": [
@@ -31,6 +33,7 @@
                     "model": "JoinPart",
                     "position": [0, 0, 0],
                     "rotation": [0, 0, 0.5],
+                    "rotationControl": [false, false, true],
                     "scale": [1, 1, 1],
                     "uid": "P1",
                     "parts": [
@@ -45,6 +48,7 @@
                             "model": "Shaft",
                             "position": [0, 0, 0],
                             "rotation": [0, 0, 0],
+                            "rotationControl": [false, true, false],
                             "scale": [0.95, 0.95, 0.95],
                             "uid": "S2",
                             "parts": [
