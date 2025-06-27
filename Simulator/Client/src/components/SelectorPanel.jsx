@@ -33,7 +33,7 @@ const panelStyle = {
   overflowY: "auto",
 };
 
-export default function RobotSelectorPanel({ onSelect, currentRobot }) {
+export default function SelectorPanel({ onSelect, currentRobot }) {
   const [selectedId, setSelectedId] = useState(
     robotsList.find(
       (r) => JSON.stringify(r.data) === JSON.stringify(currentRobot)
