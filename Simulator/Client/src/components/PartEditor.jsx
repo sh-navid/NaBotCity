@@ -1,4 +1,4 @@
-/* */
+/**/
 import React, { useState, useEffect } from 'react';
 import cloneDeep from 'lodash/cloneDeep';
 import { Theme } from '../Theme';
@@ -37,12 +37,25 @@ const PartEditor = ({ json, onJsonChange }) => {
     });
   };
 
+  // new handler for nested object fields (e.g. rotationControl.x)
+  const handleNestedValueChange = (path, parentKey, childKey, value) => {
+    setEditedJson(prev => {
+      const next = cloneDeep(prev);
+      const part = findPartByPath(next, path);
+      if (!part[parentKey]) part[parentKey] = {};
+      part[parentKey][childKey] = value;
+      onJsonChange(next);
+      return next;
+    });
+  };
+
   const handleAddPart = (mode, path) => {
     setEditedJson(prev => {
       const next = cloneDeep(prev);
       const newPart = {
         model: 'Body2', uid: generateUid(),
         position: [0,0,0], rotation:[0,0,0], scale:[1,1,1],
+        rotationControl: { x: false, y: false, z: false },
         parts: []
       };
       if (mode==='child') {
@@ -97,12 +110,31 @@ const PartEditor = ({ json, onJsonChange }) => {
       if (k==='parts') return null;
       const label = <label style={{color:Theme.LABEL_COLOR,fontSize:'.7em'}}>{k}:</label>;
       let inp;
+
       if (k==='model') {
         inp = (
           <select value={v} onChange={e=>handleValueChange(selectedPath,k,e.target.value)} style={inputStyle}>
             {modelOptions.map(o=><option key={o} value={o}>{o}</option>)}
           </select>
         );
+
+      } else if (k === 'rotationControl' && typeof v === 'object') {
+        inp = (
+          <div style={{display:'flex',gap:10,alignItems:'center'}}>
+            {['x','y','z'].map(axis => (
+              <label key={axis} style={{display:'flex',alignItems:'center',fontSize:'.75em',color:Theme.LABEL_COLOR}}>
+                <input
+                  type="checkbox"
+                  checked={!!v[axis]}
+                  onChange={e=>handleNestedValueChange(selectedPath,k,axis,e.target.checked)}
+                  style={{marginRight:4}}
+                />
+                {axis}
+              </label>
+            ))}
+          </div>
+        );
+
       } else if (Array.isArray(v)) {
         inp = (
           <div style={{display:'flex',gap:2}}>
@@ -118,6 +150,7 @@ const PartEditor = ({ json, onJsonChange }) => {
             ))}
           </div>
         );
+
       } else if (typeof v==='boolean') {
         inp = (
           <select value={v.toString()} onChange={e=>handleValueChange(selectedPath,k,e.target.value==='true')} style={inputStyle}>
@@ -125,6 +158,7 @@ const PartEditor = ({ json, onJsonChange }) => {
             <option value="false">false</option>
           </select>
         );
+
       } else {
         inp = (
           <input
@@ -138,6 +172,7 @@ const PartEditor = ({ json, onJsonChange }) => {
           />
         );
       }
+
       return <div key={k} style={{marginBottom:4}}>{label}{inp}</div>;
     });
   };
