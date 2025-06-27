@@ -1,17 +1,15 @@
-// import fs from 'fs';
+/* */
 import http from 'http';
 import path from 'path';
 import cors from 'cors';
 import { Server } from 'socket.io';
-import { ServerConfig } from "./Configs/server.config";
-import express, { Application, Request, Response } from "express";
+import { ServerConfig } from "./Configs/server.config.js";
+import express from "express";
 
-const app: Application = express();
+const app = express();
 const port = ServerConfig.Port;
-
 const server = http.createServer(app);
 const io = new Server(server);
-
 
 const corsOptions = {
   origin: 'http://localhost:4411',
@@ -20,22 +18,17 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 
-
-app.get("/", (req: Request, res: Response) => {
+app.get("/", (req, res) => {
   res.send("Server is up");
 });
 
-
-// FIXME: not a clean solution
+// Validate file parameter to prevent directory traversal
 app.get('/download/:name', (req, res) => {
-  const { name } = req.params; // FIXME: validate this
-  const filePath = path.join(__dirname, `Assets/Files/${name}.glb`);
+  const { name } = req.params; 
+  const sanitizedFileName = path.basename(name); // Basic sanitization
+  const filePath = path.join(process.cwd(), `Assets/Files/${sanitizedFileName}.glb`);
 
-  // if (!fs.existsSync(filePath)) {
-  //   return res.status(404).send('File not found.');
-  // }
-
-  res.download(filePath, `${name}.glb`, (err) => {
+  res.download(filePath, `${sanitizedFileName}.glb`, (err) => {
     if (err) {
       console.error('Error downloading the file:', err);
       res.status(500).send('Could not download the file.');
@@ -43,18 +36,10 @@ app.get('/download/:name', (req, res) => {
   });
 });
 
-
-
-
-
-
-
-
 io.on('connection', (socket) => {
   console.log('A user connected');
-
   socket.on('disconnect', () => {
-      console.log('User disconnected');
+    console.log('User disconnected');
   });
 });
 

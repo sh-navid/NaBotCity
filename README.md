@@ -19,6 +19,6 @@ NaBotCity is a hobby project simulating robots. It's currently in early developm
 ## Instruction
 - To run project
     - Open 2 terminals in program root and run these command in each
-    - `npm run dev`
-    - `npm run start-react`
+    - `npm run client`
+    - `npm run server`
 

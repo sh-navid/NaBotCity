@@ -6,9 +6,6 @@
     "@react-three/drei": "^9.114.3",
     "@react-three/fiber": "^8.17.10",
     "@react-three/rapier": "^1.5.0",
-    "@testing-library/jest-dom": "^5.17.0",
-    "@testing-library/react": "^13.4.0",
-    "@testing-library/user-event": "^13.5.0",
     "@types/jest": "^27.5.2",
     "@types/node": "^16.18.113",
     "@types/react": "^18.3.11",
@@ -22,9 +19,7 @@
   },
   "scripts": {
     "start": "PORT=4411 react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "build": "react-scripts build"
   },
   "eslintConfig": {
     "extends": [
