@@ -1,5 +1,4 @@
-/* */
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import Prism from "prismjs";
 import "prismjs/components/prism-json";
 import "prismjs/plugins/line-numbers/prism-line-numbers.css";
@@ -27,6 +26,7 @@ function getAllPartsWithUid(json) {
 }
 
 const JsonPanel = ({ json, onJsonChange, onSendToLLM }) => {
+  const [activeTab, setActiveTab] = useState("JsonViewer");
   const [jsonString, setJsonString] = useState(JSON.stringify(json, null, 2));
   const [inputValue, setInputValue] = useState("");
   const [isValidJson, setIsValidJson] = useState(true);
@@ -96,6 +96,26 @@ const JsonPanel = ({ json, onJsonChange, onSendToLLM }) => {
     background: ${Theme.PANEL_BORDER};
     border-radius: 10px;
   }
+  .tab-button {
+    background: ${Theme.CONTROL_BG};
+    color: ${Theme.TEXT_ON_BG};
+    border: none;
+    padding: 8px 16px;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: background-color 0.3s;
+    border-radius: 5px 5px 0 0;
+  }
+
+  .tab-button.active {
+    background: ${Theme.PANEL_BG};
+    border-bottom: 2px solid ${Theme.CONTROL_ACCENT};
+    color: ${Theme.CONTROL_ACCENT};
+  }
+
+  .tab-button:hover {
+    background: ${Theme.PANEL_BORDER};
+  }
   `;
 
   return (
@@ -117,61 +137,97 @@ const JsonPanel = ({ json, onJsonChange, onSendToLLM }) => {
       className="jpanel-scroll"
     >
       <style>{styles}</style>
-      <ControlPanel partsList={partsList} onSliderChange={handleSlider} />
-      <textarea
-        value={jsonString}
-        onChange={handleChange}
-        style={{ display: "none" }}
-        aria-label="JSON Input"
-      />
-      <pre
-        className="line-numbers"
+      <div
         style={{
-          flex: 1,
-          width: "100%",
-          background: Theme.CONTROL_BG,
-          color: Theme.TEXT_ON_BG,
-          border: isValidJson
-            ? `1.3px solid ${Theme.PANEL_BORDER}`
-            : `1.3px solid ${Theme.WARNING}`,
-          borderRadius: "0.6rem",
-          height: "100%",
-          minHeight: 0,
-          margin: 0,
-          overflow: "auto",
-          fontSize: "0.95rem",
-          position: "relative",
-          boxShadow: "inset 0 2px 9px #21212130",
+          display: "flex",
+          marginBottom: "10px",
         }}
-        onClick={() => {
-          document.querySelector('textarea[aria-label="JSON Input"]').focus();
-        }}
-        title="Click to edit"
       >
-        <code
-          ref={codeRef}
-          className="language-json"
-          style={{
-            width: "100%",
-            display: "block",
-            background: "transparent",
-            color: Theme.TEXT_ON_BG,
-            caretColor: Theme.CONTROL_ACCENT,
-            fontFamily: "JetBrains Mono,Consolas,monospace",
-            minHeight: "250px",
-            fontSize: "0.95rem",
-          }}
-          tabIndex={0}
-          contentEditable
-          suppressContentEditableWarning
-          onInput={(e) =>
-            handleChange({ target: { value: e.currentTarget.innerText } })
-          }
-          spellCheck={false}
+        <button
+          className={`tab-button ${activeTab === "JsonViewer" ? "active" : ""}`}
+          onClick={() => setActiveTab("JsonViewer")}
         >
-          {jsonString}
-        </code>
-      </pre>
+          JsonViewer
+        </button>
+        <button
+          className={`tab-button ${
+            activeTab === "PartRotationControl" ? "active" : ""
+          }`}
+          onClick={() => setActiveTab("PartRotationControl")}
+        >
+          Robot Control
+        </button>
+        <button
+          className={`tab-button ${activeTab === "PartEditor" ? "active" : ""}`}
+          onClick={() => setActiveTab("PartEditor")}
+        >
+          PartEditor
+        </button>
+      </div>
+      {activeTab === "JsonViewer" && (
+        <>
+          <textarea
+            value={jsonString}
+            onChange={handleChange}
+            style={{ display: "none" }}
+            aria-label="JSON Input"
+          />
+          <pre
+            className="line-numbers"
+            style={{
+              flex: 1,
+              width: "100%",
+              background: Theme.CONTROL_BG,
+              color: Theme.TEXT_ON_BG,
+              border: isValidJson
+                ? `1.3px solid ${Theme.PANEL_BORDER}`
+                : `1.3px solid ${Theme.WARNING}`,
+              borderRadius: "0.6rem",
+              height: "100%",
+              minHeight: 0,
+              margin: 0,
+              overflow: "auto",
+              fontSize: "0.95rem",
+              position: "relative",
+              boxShadow: "inset 0 2px 9px #21212130",
+            }}
+            onClick={() => {
+              document
+                .querySelector('textarea[aria-label="JSON Input"]')
+                .focus();
+            }}
+            title="Click to edit"
+          >
+            <code
+              ref={codeRef}
+              className="language-json"
+              style={{
+                width: "100%",
+                display: "block",
+                background: "transparent",
+                color: Theme.TEXT_ON_BG,
+                caretColor: Theme.CONTROL_ACCENT,
+                fontFamily: "JetBrains Mono,Consolas,monospace",
+                minHeight: "250px",
+                fontSize: "0.95rem",
+              }}
+              tabIndex={0}
+              contentEditable
+              suppressContentEditableWarning
+              onInput={(e) =>
+                handleChange({ target: { value: e.currentTarget.innerText } })
+              }
+              spellCheck={false}
+            >
+              {jsonString}
+            </code>
+          </pre>
+        </>
+      )}
+      {activeTab === "PartRotationControl" && (
+        <ControlPanel partsList={partsList} onSliderChange={handleSlider} />
+      )}
+      {activeTab === "PartEditor" && <div>Part editor content here</div>}
       <div
         style={{
           display: "flex",
