@@ -1,4 +1,3 @@
-/* */
 import { useState, useEffect, useRef } from "react";
 import Prism from "prismjs";
 import "prismjs/components/prism-json";
@@ -28,7 +27,7 @@ function getAllPartsWithUid(json) {
 }
 
 const JsonPanel = ({ json, onJsonChange, onSendToLLM }) => {
-  const [activeTab, setActiveTab] = useState("JsonViewer");
+  const [activeTab, setActiveTab] = useState("PartEditor");  // Changed default tab here
   const [jsonString, setJsonString] = useState(JSON.stringify(json, null, 2));
   const [inputValue, setInputValue] = useState("");
   const [isValidJson, setIsValidJson] = useState(true);
@@ -189,7 +188,7 @@ const JsonPanel = ({ json, onJsonChange, onSendToLLM }) => {
               minHeight: 0,
               margin: 0,
               overflow: "auto",
-              fontSize: "0.95rem",
+              fontSize: "0.65rem",  /* Reduced font size here */
               position: "relative",
               boxShadow: "inset 0 2px 9px #21212130",
             }}
@@ -211,7 +210,7 @@ const JsonPanel = ({ json, onJsonChange, onSendToLLM }) => {
                 caretColor: Theme.CONTROL_ACCENT,
                 fontFamily: "JetBrains Mono,Consolas,monospace",
                 minHeight: "250px",
-                fontSize: "0.95rem",
+                fontSize: "0.65rem",  /* Reduced font size here */
               }}
               tabIndex={0}
               contentEditable
